@@ -25,3 +25,5 @@ create table ptm_stop(
     name varchar(30) primary key not null,
     stop_type varchar(30)
 );
+
+create sequence ptm_users_seq increment 1 start 1;
