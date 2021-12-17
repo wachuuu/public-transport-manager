@@ -1,19 +1,22 @@
 -- on Windows:
 -- open cmd and go to project directory
 -- run command:
--- "C:\Program Files\PostgreSQL\13\bin\psql.exe" -U postgres -f .\publictransportmanager_db.sql postgres
+-- "C:\Program Files\PostgreSQL\14\bin\psql.exe" -U postgres -f .\publictransportmanager_db.sql postgres
 -- provide password for superuser postgres (default is: postgres)
 
 
 DROP DATABASE publictransportmanagerdb;
-DROP USER publictransportmanager;
 
-CREATE USER publictransportmanager WITH PASSWORD 'password';
+--ALTER DEFAULT PRIVILEGES REVOKE ALL ON TABLES FROM publictransportmanager;
+--ALTER DEFAULT PRIVILEGES REVOKE ALL ON SEQUENCES FROM publictransportmanager;
+--DROP USER publictransportmanager;
+
+--CREATE USER publictransportmanager WITH PASSWORD 'password';
 CREATE DATABASE publictransportmanagerdb WITH TEMPLATE=template0 OWNER=publictransportmanager;
 \connect publictransportmanagerdb;
 
-ALTER DEFAULT PRIVILEGES GRANT ALL ON TABLES TO publictransportmanager;
-ALTER DEFAULT PRIVILEGES GRANT ALL ON SEQUENCES TO publictransportmanager;
+--ALTER DEFAULT PRIVILEGES GRANT ALL ON TABLES TO publictransportmanager;
+--ALTER DEFAULT PRIVILEGES GRANT ALL ON SEQUENCES TO publictransportmanager;
 
 CREATE TABLE ptm_users(
     user_id     INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -42,7 +45,7 @@ CREATE TABLE ptm_bus_models (
     model_name          VARCHAR(50) NOT NULL,
     year_of_production  INT,
     number_of_seats     INT,
-    brand_id            VARCHAR(50) NOT NULL
+    brand_id            INT NOT NULL REFERENCES ptm_brands(brand_id)
 );
 
 CREATE TABLE ptm_buses (
@@ -56,8 +59,8 @@ CREATE TABLE ptm_buses (
 );
 
 CREATE TABLE ptm_shuttle_types (
-    shuttle_type_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    type            VARCHAR(30) NOT NULL
+    shuttle_type_id     INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    type                VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE ptm_zones (
@@ -74,13 +77,15 @@ CREATE TABLE ptm_cities (
 );
 
 CREATE TABLE ptm_tickets (
-    ticket_id       INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    validity_days   INT NOT NULL,
-    zone_id         INT NOT NULL REFERENCES ptm_zones(zone_id)
+    ticket_id           INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    validity_days       INT NOT NULL,
+    zone_id             INT NOT NULL REFERENCES ptm_zones(zone_id),
+    price               FLOAT NOT NULL,
+    discount_percentage FLOAT NOT NULL
 );
 
 CREATE TABLE ptm_passengers (
-    driver_id           INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    passenger_id        INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     pesel               VARCHAR(11) NOT NULL,
     name                VARCHAR(30) NOT NULL,
     surname             VARCHAR(30) NOT NULL,
@@ -88,23 +93,24 @@ CREATE TABLE ptm_passengers (
     email               VARCHAR(30) NOT NULL,
     adress              VARCHAR(40),
     ticket_id           INT NOT NULL REFERENCES ptm_tickets(ticket_id),
-    date_of_purchase    DATE NOT NULL
+    date_of_purchase    DATE NOT NULL,
+    valid_till          DATE
 );
 
 CREATE TABLE ptm_stops (
     stop_id                 INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name                    VARCHAR(30) NOT NULL,
     zone_id                 INT NOT NULL REFERENCES ptm_zones(zone_id),
-    interactive_boards      CHAR(1) CHECK (interactive_boards IN ('T','N'))
+    interactive_boards      BOOLEAN
 );
 
 CREATE TABLE ptm_lines (
-    number  INT PRIMARY KEY,
-    type    CHAR(1) NOT NULL CHECK (type IN ('N','D'))
+    line_number     INT PRIMARY KEY,
+    day_line        BOOLEAN NOT NULL
 );
 
-CREATE TABLE ptm_stop_orders (
-    line_number         INT NOT NULL REFERENCES ptm_lines(number),
+CREATE TABLE ptm_stops_order (
+    line_number         INT NOT NULL REFERENCES ptm_lines(line_number),
     stop_id             INT NOT NULL REFERENCES ptm_stops(stop_id),
     position_in_order   INT NOT NULL,
     PRIMARY KEY(line_number,stop_id)
@@ -112,11 +118,25 @@ CREATE TABLE ptm_stop_orders (
 
 CREATE TABLE ptm_courses (
     course_id           INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    line                INT NOT NULL REFERENCES ptm_lines(number),
+    line_number         INT NOT NULL REFERENCES ptm_lines(line_number),
     shuttle_type_id     INT NOT NULL REFERENCES ptm_shuttle_types(shuttle_type_id),
     bus_id              INT NOT NULL REFERENCES ptm_buses(bus_id),
     driver_id           INT NOT NULL REFERENCES ptm_drivers(driver_id),
-    departure_time      VARCHAR(5) NOT NULL CHECK(departure_time LIKE '%:%'),
-    arrival_time        VARCHAR(5) NOT NULL CHECK(arrival_time LIKE '%:%')
+    departure_time      VARCHAR(5) NOT NULL,
+    arrival_time        VARCHAR(5) NOT NULL
 );
 
+CREATE FUNCTION calculate_validity_period()
+    RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+    UPDATE ptm_passengers
+    SET valid_till = NEW.date_of_purchase +
+                     (SELECT validity_days FROM ptm_passengers p NATURAL JOIN ptm_tickets t
+                      WHERE t.ticket_id = NEW.ticket_id);
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER validity_period AFTER INSERT ON ptm_passengers FOR EACH ROW
+EXECUTE PROCEDURE calculate_validity_period();
