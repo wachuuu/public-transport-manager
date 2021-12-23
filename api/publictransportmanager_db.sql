@@ -4,6 +4,9 @@
 -- "C:\Program Files\PostgreSQL\14\bin\psql.exe" -U postgres -f .\publictransportmanager_db.sql postgres
 -- provide password for superuser postgres (default is: postgres)
 
+DROP TRIGGER IF EXISTS validity_period ON ptm_passengers;
+DROP FUNCTION IF EXISTS calculate_validity_period();
+DROP PROCEDURE IF EXISTS delete_passenger(integer);
 
 DROP TABLE IF EXISTS ptm_courses,
     ptm_lines,
@@ -24,8 +27,6 @@ DROP TABLE IF EXISTS ptm_courses,
     ptm_drivers,
     ptm_users
     CASCADE;
-DROP FUNCTION calculate_validity_period();
-DROP PROCEDURE delete_passenger(integer);
 
 --ALTER DEFAULT PRIVILEGES REVOKE ALL ON TABLES FROM publictransportmanager;
 --ALTER DEFAULT PRIVILEGES REVOKE ALL ON SEQUENCES FROM publictransportmanager;
@@ -52,7 +53,7 @@ CREATE TABLE ptm_drivers (
     surname             VARCHAR(30) NOT NULL,
     phone_number        VARCHAR(15) NOT NULL,
     email               VARCHAR(30) NOT NULL,
-    address              VARCHAR(40),
+    address             VARCHAR(40),
     salary              FLOAT
 );
 
@@ -112,7 +113,7 @@ CREATE TABLE ptm_passengers (
     surname             VARCHAR(30) NOT NULL,
     phone_number        VARCHAR(15) NOT NULL,
     email               VARCHAR(30) NOT NULL,
-    address              VARCHAR(40),
+    address             VARCHAR(40),
     ticket_id           INT NOT NULL REFERENCES ptm_tickets(ticket_id),
     date_of_purchase    DATE NOT NULL,
     valid_till          DATE
@@ -150,17 +151,15 @@ CREATE TABLE ptm_courses (
 CREATE OR REPLACE FUNCTION calculate_validity_period()
     RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
-BEGIN
-    UPDATE ptm_passengers
-    SET valid_till = NEW.date_of_purchase +
-                     (SELECT validity_days FROM ptm_passengers p NATURAL JOIN ptm_tickets t
-                      WHERE t.ticket_id = NEW.ticket_id);
-    RETURN NEW;
-END;
+    BEGIN
+        NEW.valid_till := NEW.date_of_purchase + (SELECT validity_days FROM ptm_tickets t
+                WHERE t.ticket_id = NEW.ticket_id);
+        RETURN NEW;
+    END;
 $$;
 
-CREATE TRIGGER validity_period AFTER INSERT ON ptm_passengers FOR EACH ROW
-EXECUTE PROCEDURE calculate_validity_period();
+CREATE TRIGGER validity_period BEFORE INSERT OR UPDATE ON ptm_passengers FOR EACH ROW
+EXECUTE FUNCTION calculate_validity_period();
 
 CREATE OR REPLACE PROCEDURE delete_passenger (IN psng_id int)
     LANGUAGE plpgsql AS
