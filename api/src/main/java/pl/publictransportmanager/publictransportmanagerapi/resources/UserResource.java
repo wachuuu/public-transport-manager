@@ -49,6 +49,7 @@ public class UserResource {
         Date data = new Date(timestamp + Constants.TOKEN_VALIDITY);
         String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_SECRET_KEY)
                 .setIssuedAt(new Date(timestamp))
+                .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
                 .claim("userId", user.getUserId())
                 .claim("email", user.getEmail())
                 .compact();
