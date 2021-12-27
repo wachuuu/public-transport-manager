@@ -19,7 +19,7 @@ public class UserRepositoryImpl implements UserRepository{
 
     private static final String SQL_CREATE =
             "INSERT INTO PTM_USERS(USER_ID, EMAIL, PASSWORD) " +
-            "VALUES(NEXTVAL('PTM_USERS_SEQ'), ?, ?)";
+            "VALUES(DEFAULT, ?, ?)";
 
     private static final String SQL_COUNT_BY_EMAIL =
             "SELECT COUNT(*) FROM PTM_USERS WHERE EMAIL = ?";
