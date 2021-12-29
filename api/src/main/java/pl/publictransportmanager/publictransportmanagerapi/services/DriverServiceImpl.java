@@ -19,12 +19,12 @@ public class DriverServiceImpl implements DriverService{
 
     @Override
     public List<Driver> fetchAllDrivers() {
-        return null;
+        return driverRepository.findAll();
     }
 
     @Override
     public Driver fetchDriverById(Integer driverId) throws PtmResourceNotFoundException {
-        return null;
+        return driverRepository.findById(driverId);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class DriverServiceImpl implements DriverService{
 
     @Override
     public void updateDriver(Integer driverId, Driver driver) throws PtmBadRequestException {
-
+        driverRepository.update(driverId,driver);
     }
 
     @Override

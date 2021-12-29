@@ -21,13 +21,16 @@ public class DriverRepositoryImpl implements DriverRepository{
             " address, salary) values (?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_FIND_BY_ID = "SELECT * FROM PTM_DRIVERS WHERE DRIVER_ID = ?";
+    private static final String SQL_FIND_ALL = "SELECT * FROM PTM_DRIVERS";
+    private static final String SQL_UPDATE = "UPDATE PTM_DRIVERS SET PESEL = ?, NAME = ?, SURNAME = ?," +
+            "PHONE_NUMBER = ?, EMAIL = ?, ADDRESS = ?, SALARY = ? WHERE DRIVER_ID = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Driver> findAll() throws PtmResourceNotFoundException {
-        return null;
+        return jdbcTemplate.query(SQL_FIND_ALL, new Object[]{},driverRowMapper);
     }
 
     @Override
@@ -63,7 +66,12 @@ public class DriverRepositoryImpl implements DriverRepository{
 
     @Override
     public void update(Integer driverId, Driver driver) throws PtmBadRequestException {
-
+        try{
+            jdbcTemplate.update(SQL_UPDATE, new Object[]{driver.getPesel(),driver.getName(),driver.getSurname(),
+                    driver.getPhone_number(),driver.getEmail(),driver.getAddress(),driver.getSalary(),driverId});
+        }catch (Exception e){
+            throw new PtmBadRequestException("Invalid Request");
+        }
     }
 
     @Override

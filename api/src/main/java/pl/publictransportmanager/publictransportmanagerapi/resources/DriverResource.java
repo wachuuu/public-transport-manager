@@ -8,6 +8,8 @@ import pl.publictransportmanager.publictransportmanagerapi.domain.Driver;
 import pl.publictransportmanager.publictransportmanagerapi.services.DriverService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,6 +18,19 @@ public class DriverResource {
 
     @Autowired
     DriverService driverService;
+
+    @GetMapping
+    public ResponseEntity<List<Driver>> getAllDrivers(HttpServletRequest request){
+        List<Driver> drivers = driverService.fetchAllDrivers();
+        return new ResponseEntity<>(drivers, HttpStatus.OK);
+    }
+
+    @GetMapping("/{driverId}")
+    public ResponseEntity<Driver> getDriverById(HttpServletRequest request,
+                                                @PathVariable("driverId") Integer driverId){
+        Driver driver = driverService.fetchDriverById(driverId);
+        return new ResponseEntity<>(driver, HttpStatus.OK);
+    }
 
     @PostMapping("")
     public ResponseEntity<Driver> addDriver(HttpServletRequest request,
@@ -29,5 +44,15 @@ public class DriverResource {
         Double salary = (Double) driverMap.get("salary");
         Driver driver = driverService.addDriver(pesel, name, surname, phone_number, email, address, salary);
         return new ResponseEntity<>(driver, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{driverId}")
+    public ResponseEntity<Map<String, Boolean>> updateDriver(HttpServletRequest request,
+                                                             @PathVariable("driverId") Integer driverId,
+                                                             @RequestBody Driver driver){
+        driverService.updateDriver(driverId,driver);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("success",true);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }
