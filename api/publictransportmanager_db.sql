@@ -24,7 +24,6 @@ DROP TABLE IF EXISTS ptm_courses,
     ptm_bus_models,
     ptm_brands,
     ptm_drivers,
-    ptm_drivers,
     ptm_users
     CASCADE;
 
