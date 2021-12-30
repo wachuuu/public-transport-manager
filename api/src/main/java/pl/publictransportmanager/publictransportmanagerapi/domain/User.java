@@ -1,6 +1,7 @@
 package pl.publictransportmanager.publictransportmanagerapi.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @Data
 @AllArgsConstructor

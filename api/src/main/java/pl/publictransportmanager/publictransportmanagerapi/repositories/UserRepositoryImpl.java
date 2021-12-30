@@ -17,22 +17,10 @@ import java.sql.Statement;
 @Repository
 public class UserRepositoryImpl implements UserRepository{
 
-    private static final String SQL_CREATE =
-            "INSERT INTO PTM_USERS(USER_ID, EMAIL, PASSWORD) " +
-            "VALUES(DEFAULT, ?, ?)";
-
-    private static final String SQL_COUNT_BY_EMAIL =
-            "SELECT COUNT(*) FROM PTM_USERS WHERE EMAIL = ?";
-
-    private static final String SQL_FIND_BY_ID =
-            "SELECT USER_ID, EMAIL, PASSWORD " +
-            "FROM PTM_USERS " +
-            "WHERE USER_ID = ?";
-
-    private static final String SQL_FIND_BY_EMAIL =
-            "SELECT USER_ID, EMAIL, PASSWORD " +
-                    "FROM PTM_USERS " +
-                    "WHERE EMAIL = ?";
+    private static final String SQL_CREATE = "INSERT INTO PTM_USERS(EMAIL, PASSWORD) VALUES(?, ?)";
+    private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM PTM_USERS WHERE EMAIL = ?";
+    private static final String SQL_FIND_BY_ID =  "SELECT * FROM PTM_USERS WHERE USER_ID = ?";
+    private static final String SQL_FIND_BY_EMAIL = "SELECT * FROM PTM_USERS WHERE EMAIL = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
