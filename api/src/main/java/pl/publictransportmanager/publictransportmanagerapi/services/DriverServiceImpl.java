@@ -41,6 +41,6 @@ public class DriverServiceImpl implements DriverService{
 
     @Override
     public void removeDriver(Integer driverId) throws PtmResourceNotFoundException {
-
+        driverRepository.removeById(driverId);
     }
 }

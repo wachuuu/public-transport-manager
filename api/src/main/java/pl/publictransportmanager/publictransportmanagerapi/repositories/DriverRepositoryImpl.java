@@ -19,11 +19,11 @@ public class DriverRepositoryImpl implements DriverRepository{
 
     private static final String SQL_CREATE = "INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email," +
             " address, salary) values (?, ?, ?, ?, ?, ?, ?)";
-
     private static final String SQL_FIND_BY_ID = "SELECT * FROM PTM_DRIVERS WHERE DRIVER_ID = ?";
     private static final String SQL_FIND_ALL = "SELECT * FROM PTM_DRIVERS";
     private static final String SQL_UPDATE = "UPDATE PTM_DRIVERS SET PESEL = ?, NAME = ?, SURNAME = ?," +
             "PHONE_NUMBER = ?, EMAIL = ?, ADDRESS = ?, SALARY = ? WHERE DRIVER_ID = ?";
+    private static final String SQL_DELETE = "DELETE FROM PTM_DRIVERS WHERE DRIVER_ID = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -76,7 +76,9 @@ public class DriverRepositoryImpl implements DriverRepository{
 
     @Override
     public void removeById(Integer driverId) {
-
+        int count = jdbcTemplate.update(SQL_DELETE, new Object[]{driverId});
+        if (count == 0)
+            throw new PtmResourceNotFoundException("Driver not found");
     }
 
     private RowMapper<Driver> driverRowMapper = ((rs, rowNum) -> {

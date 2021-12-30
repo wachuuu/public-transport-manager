@@ -18,11 +18,8 @@ import java.sql.Statement;
 public class UserRepositoryImpl implements UserRepository{
 
     private static final String SQL_CREATE = "INSERT INTO PTM_USERS(EMAIL, PASSWORD) VALUES(?, ?)";
-
     private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM PTM_USERS WHERE EMAIL = ?";
-
     private static final String SQL_FIND_BY_ID =  "SELECT * FROM PTM_USERS WHERE USER_ID = ?";
-
     private static final String SQL_FIND_BY_EMAIL = "SELECT * FROM PTM_USERS WHERE EMAIL = ?";
 
     @Autowired
