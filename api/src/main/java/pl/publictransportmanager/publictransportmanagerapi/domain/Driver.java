@@ -21,7 +21,5 @@ public class Driver {
     private String address;
     private Double salary;
 
-    public Driver() {
-
-    }
+    public Driver() {}
 }

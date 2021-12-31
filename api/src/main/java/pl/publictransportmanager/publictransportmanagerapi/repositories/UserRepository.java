@@ -1,16 +1,13 @@
 package pl.publictransportmanager.publictransportmanagerapi.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import pl.publictransportmanager.publictransportmanagerapi.domain.User;
-import pl.publictransportmanager.publictransportmanagerapi.exceptions.PtmAuthException;
 
-public interface UserRepository {
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-    Integer create(String email, String password) throws PtmAuthException;
+    User findByEmail(String email);
 
-    User findByEmailAndPassword(String email, String password) throws PtmAuthException;
-
-    Integer getCountByEmail(String email);
-
-    User findById(Integer userId);
-
+    Boolean existsByEmail(String email);
 }
