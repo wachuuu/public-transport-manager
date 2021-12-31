@@ -60,6 +60,7 @@ public class UserResource {
             throw new PtmAuthException("Email already in use");
 
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(10));
+        user.setEmail(email);
         user.setPassword(hashedPassword);
         userRepository.save(user);
         return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
