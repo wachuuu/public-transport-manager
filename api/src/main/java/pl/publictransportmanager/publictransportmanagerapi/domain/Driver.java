@@ -1,11 +1,17 @@
 package pl.publictransportmanager.publictransportmanagerapi.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+import javax.persistence.*;
+
+@Entity
+@Table(name = "ptm_drivers")
+@Setter
+@Getter
+@ToString
 public class Driver {
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer driver_id;
     private String pesel;
     private String name;
@@ -14,4 +20,8 @@ public class Driver {
     private String email;
     private String address;
     private Double salary;
+
+    public Driver() {
+
+    }
 }
