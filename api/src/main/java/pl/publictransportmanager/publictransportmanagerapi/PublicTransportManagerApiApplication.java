@@ -9,6 +9,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import pl.publictransportmanager.publictransportmanagerapi.filters.AuthFilter;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 @SpringBootApplication
 public class PublicTransportManagerApiApplication {
 
@@ -23,6 +26,9 @@ public class PublicTransportManagerApiApplication {
 		CorsConfiguration config = new CorsConfiguration();
 		config.addAllowedOrigin("*");
 		config.addAllowedHeader("*");
+		config.setAllowedOrigins(Collections.singletonList("*"));
+		config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
 		source.registerCorsConfiguration("/**", config);
 		registrationBean.setFilter(new CorsFilter(source));
 		registrationBean.setOrder(0);
