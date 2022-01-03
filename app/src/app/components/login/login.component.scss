@@ -1,0 +1,43 @@
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.form-card {
+  width: 20rem;
+  padding: 2rem 1rem;
+}
+
+.form-input {
+  display: block;
+}
+
+.form-error {
+  text-align: center;
+  color: red;
+  padding: .5rem 0;
+}
+
+.form-login {
+  position: absolute;
+  justify-content: center;
+}
+
+.login-button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+mat-toolbar {
+  justify-content: center;
+  height: fit-content;
+  background: transparent;
+  margin-bottom: .5rem;
+}
+
+button .mat-icon {
+  font-size: 1.1rem !important;
+  color: rgb(118, 118, 118);
+}

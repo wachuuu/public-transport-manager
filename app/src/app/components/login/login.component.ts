@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   submitted = false;
   error = '';
+  hide = true;
   
   constructor(
     private formBuilder: FormBuilder,
@@ -30,8 +31,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      username: ['email@example.com', Validators.required],
-      password: ['pass123', Validators.required]
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
