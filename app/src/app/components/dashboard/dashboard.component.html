@@ -1,1 +1,12 @@
-<p>dashboard works!</p>
+<h2>Dashboard</h2>
+<p>Choose which part of the communication system are you interested in</p>
+<div class="pages">
+  <button mat-raised-button class="page-button" [routerLink]="'/courses'">Courses</button>
+  <button mat-raised-button class="page-button" [routerLink]="'/lines'">Lines</button>
+  <button mat-raised-button class="page-button" [routerLink]="'/stops'">Stops</button>
+  <button mat-raised-button class="page-button" [routerLink]="'/buses'">Buses</button>
+  <button mat-raised-button class="page-button" [routerLink]="'/tickets'">Tickets</button>
+  <button mat-raised-button class="page-button" [routerLink]="'/drivers'">Drivers</button>
+  <button mat-raised-button class="page-button" [routerLink]="'/passengers'">Passengers</button>
+  <button mat-raised-button class="page-button" [routerLink]="'/zones'">Zones</button>
+</div>

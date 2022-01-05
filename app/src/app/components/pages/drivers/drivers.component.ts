@@ -10,6 +10,7 @@ import { DriversService } from 'src/app/services/drivers.service';
 export class DriversComponent implements OnInit {
 
   drivers: Driver[];
+  displayedColumns: string[] = ['driver_id', 'name', 'surname', 'email', 'phone_number', 'more', 'edit'];
 
   constructor(private driversService: DriversService) {
     this.driversService.drivers$.subscribe((data) => {

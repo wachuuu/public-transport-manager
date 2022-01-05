@@ -1,0 +1,21 @@
+:host {
+ .pages {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   align-items: center;
+
+    .page-button {
+      min-width: 250px;
+      min-height: 200px;
+      margin: 2rem;
+      padding: 3rem;
+      font-size: 20px;
+
+      &:hover {
+        transform: scale(1.05);
+        transition: transform .25s ease-in-out;
+      }
+    }
+ } 
+}
