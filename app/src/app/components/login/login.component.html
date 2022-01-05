@@ -1,0 +1,47 @@
+<div class="login-container">
+    <mat-card class="form-card">
+        <mat-toolbar> Public Transport Manager </mat-toolbar>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-error" *ngIf="error" > {{error}} </div>
+
+            <mat-form-field class="form-input">
+                <input matInput 
+                    formControlName="username"
+                    #emailRef
+                    type="text" 
+                    placeholder="Email address" 
+                    required
+                    (keyup.enter)="passRef.focus()">
+            </mat-form-field>
+
+            <mat-form-field class="form-input">
+                <input matInput 
+                    #passRef
+                    formControlName="password"
+                    type="password" 
+                    placeholder="Password" 
+                    required
+                    [type]="hide ? 'password' : 'text'">
+                
+                <button mat-icon-button 
+                    type="button"
+                    matSuffix 
+                    (click)="hide = !hide">
+                    <mat-icon class="visibility-button">
+                        {{hide ? 'visibility_off' : 'visibility'}}
+                    </mat-icon>
+                </button>
+            </mat-form-field>
+
+            <div class="login-button">
+                <button mat-raised-button 
+                    type="submit"
+                    color="primary"
+                    (click)="onSubmit()"> 
+                        Login 
+                </button>
+            </div>
+        </form>
+    </mat-card>
+</div>
