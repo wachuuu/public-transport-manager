@@ -27,7 +27,7 @@ public class PublicTransportManagerApiApplication {
 		config.addAllowedOrigin("*");
 		config.addAllowedHeader("*");
 		config.setAllowedOrigins(Collections.singletonList("*"));
-		config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+		config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
 		source.registerCorsConfiguration("/**", config);
 		registrationBean.setFilter(new CorsFilter(source));
