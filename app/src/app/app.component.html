@@ -1,4 +1,9 @@
-<div *ngIf="currentUser" class="navbar">
-  <button (click)="logout()" >logout</button>
+<mat-card class="navbar" *ngIf="currentUser">
+  <button class="logout" mat-raised-button color="primary" (click)="logout()" >logout</button>
+  <h1>Public Transport Manager</h1>
+</mat-card>
+<div class="main-panel">
+  <mat-card class="container">
+    <router-outlet></router-outlet>
+  </mat-card>
 </div>
-<router-outlet></router-outlet>
