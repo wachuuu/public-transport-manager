@@ -9,13 +9,11 @@ import pl.publictransportmanager.publictransportmanagerapi.exceptions.PtmBadRequ
 import pl.publictransportmanager.publictransportmanagerapi.exceptions.PtmResourceNotFoundException;
 import pl.publictransportmanager.publictransportmanagerapi.repositories.DriverRepository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/transport/drivers")
+@RequestMapping("/api/drivers")
 public class DriverResource {
 
     @Autowired
@@ -47,22 +45,24 @@ public class DriverResource {
     @PutMapping("/{driverId}")
     public ResponseEntity<Driver> updateDriver(@PathVariable("driverId") Integer driverId,
                                                @RequestBody Driver driver){
-        driver.setDriver_id(driverId);
-        try{
-            return new ResponseEntity<>(driverRepository.save(driver),HttpStatus.OK);
-        } catch (Exception e){
-            throw new PtmBadRequestException("Invalid request");
-        }
+        Optional<Driver> driverFound = driverRepository.findById(driverId);
+        if (driverFound.isPresent()) {
+            driver.setDriver_id(driverId);
+            try{
+                return new ResponseEntity<>(driverRepository.save(driver),HttpStatus.OK);
+            } catch (Exception e){
+                throw new PtmBadRequestException("Invalid request");
+            }
+        } else
+            throw new PtmResourceNotFoundException("Driver not found");
     }
 
     @DeleteMapping("/{driverId}")
-    public ResponseEntity<Map<String, Boolean>> deleteDriver(@PathVariable("driverId") Integer driverId) {
+    public ResponseEntity<Driver> deleteDriver(@PathVariable("driverId") Integer driverId) {
         Optional<Driver> driver = driverRepository.findById(driverId);
         if (driver.isPresent()) {
             driverRepository.delete(driver.get());
-            Map<String, Boolean> map = new HashMap<>();
-            map.put("success", true);
-            return new ResponseEntity<>(map, HttpStatus.OK);
+            return new ResponseEntity<>(driver.get(), HttpStatus.OK);
         } else
             throw new PtmResourceNotFoundException("Driver not found");
     }

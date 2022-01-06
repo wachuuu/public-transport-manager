@@ -66,7 +66,7 @@ CREATE TABLE ptm_bus_models (
     model_name          VARCHAR(50) NOT NULL,
     year_of_production  INT,
     number_of_seats     INT,
-    brand_id            INT NOT NULL REFERENCES ptm_brands(brand_id)
+    brand_id            INT NOT NULL REFERENCES ptm_brands(brand_id) ON DELETE CASCADE
 );
 
 CREATE TABLE ptm_buses (
@@ -76,7 +76,7 @@ CREATE TABLE ptm_buses (
     service_date                DATE,
     monthly_maintenance_cost    FLOAT,
     cost                        FLOAT,
-    model_id                    INT NOT NULL REFERENCES ptm_bus_models(model_id)
+    model_id                    INT NOT NULL REFERENCES ptm_bus_models(model_id) ON DELETE CASCADE
 );
 
 CREATE TABLE ptm_shuttle_types (
