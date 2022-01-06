@@ -22,7 +22,7 @@
   <div *ngIf="isActivePanel('edit')" class="edit action-panel">
     <h3>Edit driver info</h3>
     <div class="container">
-      <form action="post" (ngSubmit)="addDriver(newDriver)">
+      <form action="post">
         <mat-form-field class="form-input">
           <input matInput 
             name = "name"

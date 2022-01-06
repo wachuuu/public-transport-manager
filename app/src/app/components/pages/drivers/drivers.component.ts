@@ -33,41 +33,41 @@ export class DriversComponent implements OnInit {
   constructor(private driversService: DriversService) {
     this.dataSource = new MatTableDataSource();
     this.driversService.drivers$.subscribe((data) => {
-      this.dataSource.data = data
+      this.dataSource.data = data;
     })
   }
   
   ngOnInit(): void {
-    this.driversService.getDrivers()
+    this.driversService.getDrivers();
   }
   
   showPanel(type: string, driver?: Driver) {
     if (driver) this.currentDriver = driver;
     switch(type) { 
       case 'none': { 
-        this.currentAction = Actions.None
+        this.currentAction = Actions.None;
         break; 
       } 
       case 'add-new': { 
-        this.currentAction = Actions.AddNew
-        this.newDriver = this.blankDriver
+        this.currentAction = Actions.AddNew;
+        this.newDriver = JSON.parse(JSON.stringify(this.blankDriver));
         break; 
       }
       case 'view': { 
-        this.currentAction = Actions.View
+        this.currentAction = Actions.View;
         break; 
       }
       case 'edit': { 
-        this.currentAction = Actions.Edit
-        this.newDriver = this.currentDriver
+        this.currentAction = Actions.Edit;
+        this.newDriver = JSON.parse(JSON.stringify(this.currentDriver));
         break; 
       }
       case 'delete': { 
-        this.currentAction = Actions.Delete
+        this.currentAction = Actions.Delete;
         break; 
       }
       default: { 
-        this.currentAction = Actions.None
+        this.currentAction = Actions.None;
         break; 
       } 
     }
