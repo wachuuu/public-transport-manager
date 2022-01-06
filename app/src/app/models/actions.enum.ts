@@ -1,4 +1,3 @@
-
 export enum Actions {
   None,
   Edit,
