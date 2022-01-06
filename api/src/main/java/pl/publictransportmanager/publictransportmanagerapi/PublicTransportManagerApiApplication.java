@@ -41,6 +41,10 @@ public class PublicTransportManagerApiApplication {
 		AuthFilter authFilter = new AuthFilter();
 		registrationBean.setFilter(authFilter);
 		registrationBean.addUrlPatterns("/api/transport/*");
+		registrationBean.addUrlPatterns("/api/drivers/*");
+		registrationBean.addUrlPatterns("/api/brands/*");
+		registrationBean.addUrlPatterns("/api/bus_models/*");
+		registrationBean.addUrlPatterns("/api/buses/*");
 		return registrationBean;
 	}
 }

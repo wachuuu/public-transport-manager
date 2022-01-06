@@ -11,7 +11,7 @@ import javax.persistence.*;
 @ToString
 public class Driver {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer driver_id;
     private String pesel;
     private String name;
