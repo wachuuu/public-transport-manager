@@ -13,6 +13,7 @@ p {
 }
 
 a, a:active, a:visited {
+  cursor: pointer;
   color: rgb(4, 155, 209);
   font-size: 16px;
   text-decoration: none;
@@ -28,6 +29,10 @@ a, a:active, a:visited {
     width: 16px !important;
     height: 16px !important;
   }
+
+  &.delete {
+    color: red;
+  }
 }
 
 .action-centre {
@@ -35,6 +40,41 @@ a, a:active, a:visited {
   padding: 2rem 1rem;
   border: rgba(0, 0, 0, 0.1) 1px solid;
   border-radius: 10px;
+
+  .action-panel {
+    position: relative;
+    
+    .action-buttons {
+      position: absolute;
+      right: -.5rem;
+      bottom: -1rem;
+
+      button {
+        margin: 0 0.5rem;
+      }
+    }
+  }
+
+  .view {
+    .container {
+      display: flex;
+
+      div {
+        margin-right: 2rem;
+      }
+    }
+  }
+
+  .add-new, .edit {
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+
+      mat-form-field {
+        margin: 0 1rem;
+      }
+    }
+  }
 }
 
 .data-table {

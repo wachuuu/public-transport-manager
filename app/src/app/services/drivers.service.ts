@@ -26,7 +26,9 @@ export class DriversService {
 
   public addDriver(driver: Driver) {
     this.http.post<Driver>(this.url, driver, { observe: 'response' }).subscribe((response) => {
-      if (response.ok) this.drivers = [...this.drivers, response.body];
+      if (response.ok) {
+        this.drivers = [...this.drivers, response.body];
+      }
     })
   }
 
