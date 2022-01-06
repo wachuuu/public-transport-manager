@@ -3,3 +3,92 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+h2 {
+  font-size: 32px;
+  font-weight: 400;
+}
+
+p {
+  font-size: 16px;
+}
+
+a, a:active, a:visited {
+  cursor: pointer;
+  color: rgb(4, 155, 209);
+  font-size: 16px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: rgb(3, 133, 181);
+  }
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  &.delete {
+    color: red;
+  }
+}
+
+.action-centre {
+  margin: 2rem 0;
+  padding: 2rem 1rem;
+  border: rgba(0, 0, 0, 0.1) 1px solid;
+  border-radius: 10px;
+
+  .action-panel {
+    position: relative;
+    
+    .action-buttons {
+      position: absolute;
+      right: -.5rem;
+      bottom: -1rem;
+
+      button {
+        margin: 0 0.5rem;
+      }
+    }
+  }
+
+  .view {
+    .container {
+      display: flex;
+
+      div {
+        margin-right: 2rem;
+      }
+    }
+  }
+
+  .add-new, .edit {
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+
+      mat-form-field {
+        margin: 0 1rem;
+      }
+    }
+  }
+}
+
+.data-table {
+  width: 100%;
+  overflow: auto;
+  border: rgba(0, 0, 0, 0.1) 1px solid;
+  border-radius: 10px;
+  font-size: 14px;
+
+  .full-width-table {
+    width: 100%;
+  }
+
+  a {
+    font-size: 14px;
+  }
+}

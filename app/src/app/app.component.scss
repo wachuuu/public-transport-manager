@@ -1,0 +1,25 @@
+:host {
+  .navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .logout {
+      position: absolute;
+      right: 1rem;
+    }
+  }
+
+  .main-panel {    
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+
+    .container {
+      box-sizing: border-box;
+      width: 75%;
+      padding: 3rem;
+    }
+  }
+}

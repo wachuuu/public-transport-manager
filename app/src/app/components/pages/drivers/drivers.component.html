@@ -1,0 +1,259 @@
+<a routerLink="/">
+  <mat-icon>arrow_back_ios</mat-icon>
+  <span>back</span>
+</a>
+<h2>Drivers</h2>
+<p>Here you can modify, delete, view or insert data related to bus drivers</p>
+
+<div class="action-centre">
+
+  <!-- NONE -->
+  <div *ngIf="isActivePanel('none')" class="none action-panel">
+    <h3>Action centre</h3>
+    <p>Choose which record you want to edit or 
+      <a style="display: inline-flex;" (click)="showPanel('add-new')">
+        <span>add new</span>
+        <mat-icon>add</mat-icon>
+      </a> 
+    </p>
+  </div>
+
+  <!-- EDIT -->
+  <div *ngIf="isActivePanel('edit')" class="edit action-panel">
+    <h3>Edit driver info</h3>
+    <div class="container">
+      <form action="post" (ngSubmit)="addDriver(newDriver)">
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "name"
+            #name = "ngModel"
+            [(ngModel)]="newDriver.name"
+            type="text" 
+            placeholder="Name" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "surname"
+            #surname = "ngModel"
+            [(ngModel)]="newDriver.surname"
+            type="text" 
+            placeholder="Surname" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "pesel"
+            #pesel = "ngModel"
+            [(ngModel)]="newDriver.pesel"
+            type="text" 
+            placeholder="Pesel" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "phone"
+            #phone = "ngModel"
+            [(ngModel)]="newDriver.phone_number"
+            type="text" 
+            placeholder="Phone" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "email"
+            #email = "ngModel"
+            [(ngModel)]="newDriver.email"
+            type="email" 
+            placeholder="Email" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "address"
+            [(ngModel)]="newDriver.address"
+            type="text" 
+            placeholder="Address">
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "salary"
+            [(ngModel)]="newDriver.salary"
+            type="number" 
+            placeholder="Salary">
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="action-buttons">
+      <button mat-raised-button
+        [disabled]="name.invalid || surname.invalid || pesel.invalid || phone.invalid || email.invalid" 
+        (click)="editDriver(newDriver)"> 
+        Save 
+      </button>
+      <button mat-raised-button (click)="showPanel('view', currentDriver)"> Cancel </button>
+    </div>
+  </div>
+
+  <!-- VIEW -->
+  <div *ngIf="isActivePanel('view')" class="view action-panel">
+    <h3>More info</h3>
+    <div class="container">
+      <div>
+        <strong>Driver ID: </strong> {{ currentDriver.driver_id }} <br>
+        <strong>Name: </strong> {{ currentDriver.name }} <br>
+        <strong>Surmane: </strong> {{ currentDriver.surname }} <br>
+        <strong>Pesel: </strong> {{ currentDriver.pesel }} <br>
+      </div>
+      <div>
+        <strong>Phone number: </strong> {{ currentDriver.phone_number }} <br>
+        <strong>Email: </strong> {{ currentDriver.email }} <br>
+        <strong>Address: </strong> {{ currentDriver.address ?? 'unspecified'}} <br>
+        <strong>Salary: </strong> {{ currentDriver.salary ?? 'unspecified' }} <br>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button mat-raised-button (click)="showPanel('edit', currentDriver)"> Edit </button>
+      <button mat-raised-button (click)="showPanel('none')"> Close </button>
+    </div>
+  </div>
+
+  <!-- ADD NEW -->
+  <div *ngIf="isActivePanel('add-new')" class="add-new action-panel">
+    <h3>Add new driver</h3>
+    <div class="container">
+      <form action="post" (ngSubmit)="addDriver(newDriver)">
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "name"
+            #name = "ngModel"
+            [(ngModel)]="newDriver.name"
+            type="text" 
+            placeholder="Name" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "surname"
+            #surname = "ngModel"
+            [(ngModel)]="newDriver.surname"
+            type="text" 
+            placeholder="Surname" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "pesel"
+            #pesel = "ngModel"
+            [(ngModel)]="newDriver.pesel"
+            type="text" 
+            placeholder="Pesel" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "phone"
+            #phone = "ngModel"
+            [(ngModel)]="newDriver.phone_number"
+            type="text" 
+            placeholder="Phone" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "email"
+            #email = "ngModel"
+            [(ngModel)]="newDriver.email"
+            type="email" 
+            placeholder="Email" 
+            required>
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "address"
+            [(ngModel)]="newDriver.address"
+            type="text" 
+            placeholder="Address">
+        </mat-form-field>
+        <mat-form-field class="form-input">
+          <input matInput 
+            name = "salary"
+            [(ngModel)]="newDriver.salary"
+            type="number" 
+            placeholder="Salary">
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="action-buttons">
+      <button mat-raised-button 
+        [disabled]="name.invalid || surname.invalid || pesel.invalid || phone.invalid || email.invalid" 
+        (click)="addDriver(newDriver)"> 
+        Save 
+      </button>
+      <button mat-raised-button (click)="showPanel('none')"> Cancel </button>
+    </div>
+  </div>
+
+  <!-- DELETE -->
+  <div *ngIf="isActivePanel('delete')" class="delete action-panel">
+    <h3>Delete dirver</h3>
+    <p>Are you sure you want to delete driver <strong>{{ currentDriver.name }} {{ currentDriver.surname }}</strong>?</p>
+    <p>This operation cannot be undone</p>
+    <div class="action-buttons">
+      <button mat-raised-button color="warn" (click)="deleteDriver(currentDriver)"> Delete </button>
+      <button mat-raised-button (click)="showPanel('none')"> Cancel </button>
+    </div>
+  </div>
+</div>
+
+<div class="data-table">
+  <table mat-table [dataSource]="dataSource" class="full-width-table">
+    <ng-container matColumnDef="driver_id">
+      <th mat-header-cell *matHeaderCellDef> Driver ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.driver_id}} </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="surname">
+      <th mat-header-cell *matHeaderCellDef> Surname </th>
+      <td mat-cell *matCellDef="let row"> {{row.surname}} </td>
+    </ng-container>
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+    </ng-container>
+    <ng-container matColumnDef="phone_number">
+      <th mat-header-cell *matHeaderCellDef> Phone </th>
+      <td mat-cell *matCellDef="let row"> {{row.phone_number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="more">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row"> 
+        <a (click)="showPanel('view', row)">
+          <span>more</span>
+          <mat-icon>arrow_forward_ios</mat-icon>
+        </a> 
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row"> 
+        <a (click)="showPanel('edit', row)">
+          <mat-icon>create</mat-icon>
+          <span>edit</span>
+        </a> 
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row"> 
+        <a (click)="showPanel('delete', row)" class="delete" >
+          <mat-icon>delete</mat-icon>
+        </a> 
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
