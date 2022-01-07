@@ -166,4 +166,21 @@ $$
     BEGIN
         DELETE FROM ptm_passengers WHERE ptm_passengers.passenger_id = psng_id;
     END;
-$$
+$$;
+
+--Filling tables with sample values
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('12345678901','John','Smith','665321312','john.smith@example.com','22 Acacia Avenue',3400);
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('10987654321','James','Bond','693456987','007@mi6.com','10 Downing Street',4007);
+
+INSERT INTO ptm_brands (name) VALUES ('Solaris');
+INSERT INTO ptm_brands (name) VALUES ('Star');
+
+INSERT INTO ptm_bus_models (model_name, year_of_production, number_of_seats, brand_id) VALUES ('AR-150',2010,50,1);
+INSERT INTO ptm_bus_models (model_name, year_of_production, number_of_seats, brand_id) VALUES ('HX-220',1998,54,2);
+
+INSERT INTO ptm_buses (number_plate, purchase_date, service_date, monthly_maintenance_cost, cost, model_id) VALUES
+    ('PO 12345',date '2019-04-13',date '2021-12-04',1300,200000,1);
+INSERT INTO ptm_buses (number_plate, purchase_date, service_date, monthly_maintenance_cost, cost, model_id) VALUES
+    ('PO 54321',date '2016-11-20',date '2021-10-15',1500,250000,2);
