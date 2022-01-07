@@ -40,12 +40,7 @@ public class BusModelResource {
 
     @PostMapping("")
     public ResponseEntity<BusModel> addBusModel(@RequestBody BusModel busModel){
-        if (busModel.getBrand().getBrand_id()!=null)
-        {
-            Optional<Brand> brandFound = brandRepository.findById(busModel.getBrand().getBrand_id());
-            if (brandFound.isPresent())
-                busModel.setBrand(brandFound.get());
-        }
+        busModel = checkBrand(busModel);
         try{
             return new ResponseEntity<>(busModelRepository.save(busModel), HttpStatus.CREATED);
         } catch (Exception e){
@@ -56,8 +51,8 @@ public class BusModelResource {
     @PutMapping("/{busModelId}")
     public ResponseEntity<BusModel> updateBusModel(@PathVariable("busModelId") Integer busModelId,
                                                    @RequestBody BusModel busModel){
-        Optional<BusModel> busModelFound = busModelRepository.findById(busModelId);
-        if (busModelFound.isPresent()) {
+        if (busModelRepository.existsById(busModelId)){
+            busModel = checkBrand(busModel);
             busModel.setModel_id(busModelId);
             try {
                 return new ResponseEntity<>(busModelRepository.save(busModel), HttpStatus.OK);
@@ -76,5 +71,23 @@ public class BusModelResource {
             return new ResponseEntity<>(busModel.get(), HttpStatus.OK);
         } else
             throw new PtmResourceNotFoundException("Bus model not found");
+    }
+
+    public BusModel checkBrand(BusModel busModel) {
+        if (busModel.getBrand().getBrand_id() != null) {
+            Optional<Brand> brandFound = brandRepository.findById(busModel.getBrand().getBrand_id());
+            if (brandFound.isPresent())
+                busModel.setBrand(brandFound.get());
+            else {
+                throw new PtmBadRequestException("Invalid request");
+            }
+        } else {
+            try {
+                busModel.setBrand(brandRepository.save(busModel.getBrand()));
+            } catch (Exception e) {
+                throw new PtmBadRequestException("Invalid request");
+            }
+        }
+        return busModel;
     }
 }

@@ -45,8 +45,7 @@ public class BrandResource {
     @PutMapping("/{brandId}")
     public ResponseEntity<Brand> updateBrand(@PathVariable("brandId") Integer brandId,
                                              @RequestBody Brand brand){
-        Optional<Brand> brandFound = brandRepository.findById(brandId);
-        if (brandFound.isPresent()) {
+        if (brandRepository.existsById(brandId)) {
             brand.setBrand_id(brandId);
             try {
                 return new ResponseEntity<>(brandRepository.save(brand), HttpStatus.OK);

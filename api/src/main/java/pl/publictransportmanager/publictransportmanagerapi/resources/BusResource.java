@@ -24,6 +24,9 @@ public class BusResource {
     @Autowired
     BusModelRepository busModelRepository;
 
+    @Autowired
+    BusModelResource busModelResource;
+
     @GetMapping("")
     public ResponseEntity<List<Bus>> getAllBuses(){
         List<Bus> buses = busRepository.findAll();
@@ -40,12 +43,7 @@ public class BusResource {
 
     @PostMapping("")
     public ResponseEntity<Bus> addBus(@RequestBody Bus bus){
-        if (bus.getBus_model().getModel_id()!=null)
-        {
-            Optional<BusModel> busModelFound = busModelRepository.findById(bus.getBus_model().getModel_id());
-            if (busModelFound.isPresent())
-                bus.setBus_model(busModelFound.get());
-        }
+        bus = checkBusModel(bus);
         try{
             return new ResponseEntity<>(busRepository.save(bus), HttpStatus.CREATED);
         } catch (Exception e){
@@ -56,8 +54,8 @@ public class BusResource {
     @PutMapping("/{busId}")
     public ResponseEntity<Bus> updateBus(@PathVariable("busId") Integer busId,
                                          @RequestBody Bus bus){
-        Optional<Bus> busFound = busRepository.findById(busId);
-        if (busFound.isPresent()) {
+        if (busRepository.existsById(busId)){
+            bus = checkBusModel(bus);
             bus.setBus_id(busId);
             try{
                 return new ResponseEntity<>(busRepository.save(bus), HttpStatus.OK);
@@ -76,5 +74,24 @@ public class BusResource {
             return new ResponseEntity<>(bus.get(), HttpStatus.OK);
         } else
             throw new PtmResourceNotFoundException("Bus not found");
+    }
+
+    public Bus checkBusModel(Bus bus) {
+        if (bus.getBus_model().getModel_id() != null) {
+            Optional<BusModel> busModelFound = busModelRepository.findById(bus.getBus_model().getModel_id());
+            if (busModelFound.isPresent()){
+                bus.setBus_model(busModelFound.get());
+            }
+            else {
+                throw new PtmBadRequestException("Invalid request");
+            }
+        } else {
+            try {
+                bus.setBus_model(busModelRepository.save(busModelResource.checkBrand(bus.getBus_model())));
+            } catch (Exception e) {
+                throw new PtmBadRequestException("Invalid request");
+            }
+        }
+        return bus;
     }
 }
