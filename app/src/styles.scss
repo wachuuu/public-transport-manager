@@ -35,6 +35,12 @@ a, a:active, a:visited {
   }
 }
 
+.nav-tabs {
+  .tab {
+    margin-top: 1rem;
+  }
+}
+
 .action-centre {
   margin: 2rem 0;
   padding: 2rem 1rem;
@@ -78,7 +84,7 @@ a, a:active, a:visited {
 }
 
 .data-table {
-  width: 100%;
+  // width: 100%;
   overflow: auto;
   border: rgba(0, 0, 0, 0.1) 1px solid;
   border-radius: 10px;

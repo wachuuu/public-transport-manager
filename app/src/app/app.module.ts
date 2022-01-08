@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,11 +16,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
+import { BrandDetailsComponent } from './components/pages/buses/brand-details/brand-details.component';
+import { BusDetailsComponent } from './components/pages/buses/bus-details/bus-details.component';
+import { BusModelDetailsComponent } from './components/pages/buses/bus-model-details/bus-model-details.component';
+import { BusesComponent } from './components/pages/buses/buses.component';
 import { DriversComponent } from './components/pages/drivers/drivers.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
-import { BusesComponent } from './components/pages/buses/buses.component';
-
 
 
 @NgModule({
@@ -29,6 +32,9 @@ import { BusesComponent } from './components/pages/buses/buses.component';
     DashboardComponent,
     DriversComponent,
     BusesComponent,
+    BusDetailsComponent,
+    BrandDetailsComponent,
+    BusModelDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,7 +50,8 @@ import { BusesComponent } from './components/pages/buses/buses.component';
     MatCardModule,
     MatToolbarModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    MatTabsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

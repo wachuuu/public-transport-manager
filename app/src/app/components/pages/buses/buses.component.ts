@@ -34,8 +34,4 @@ export class BusesComponent implements OnInit {
     this.busesService.getModels();
     this.busesService.getBuses();
   }
-
-  test() {
-    console.log(this.busesService.getBrandById(5));
-  }
 }
