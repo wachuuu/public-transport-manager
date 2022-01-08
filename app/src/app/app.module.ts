@@ -18,6 +18,7 @@ import { LoginComponent } from './components/login/login.component';
 import { DriversComponent } from './components/pages/drivers/drivers.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
+import { BusesComponent } from './components/pages/buses/buses.component';
 
 
 
@@ -27,6 +28,7 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
     LoginComponent,
     DashboardComponent,
     DriversComponent,
+    BusesComponent,
   ],
   imports: [
     BrowserModule,

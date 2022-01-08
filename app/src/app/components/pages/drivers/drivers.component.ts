@@ -15,7 +15,6 @@ export class DriversComponent implements OnInit {
   displayedColumns: string[] = ['driver_id', 'name', 'surname', 'email', 'phone_number', 
                                 'more', 'edit', 'delete'];
   currentAction: Actions = Actions.None;
-  isSaveEnabled = false;
   currentDriver: Driver;
   newDriver: Driver;
   blankDriver: Driver = {
