@@ -36,6 +36,7 @@ public class BrandResource {
     @PostMapping("")
     public ResponseEntity<Brand> addBrand(@RequestBody Brand brand){
         try{
+            brand.setBrand_id(null);
             return new ResponseEntity<>(brandRepository.save(brand), HttpStatus.CREATED);
         } catch (Exception e){
             throw new PtmBadRequestException("Invalid request");

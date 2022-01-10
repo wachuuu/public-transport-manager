@@ -11,12 +11,10 @@ DROP PROCEDURE IF EXISTS delete_passenger(integer);
 DROP TABLE IF EXISTS ptm_courses,
     ptm_lines,
     ptm_stops_order,
-    ptm_lines,
-    ptm_stops_order,
-    ptm_stops,
     ptm_stops,
     ptm_passengers,
     ptm_tickets,
+    ptm_zone_affiliations,
     ptm_cities,
     ptm_zones,
     ptm_shuttle_types,
@@ -93,14 +91,19 @@ CREATE TABLE ptm_cities (
     city_id             INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name                VARCHAR(30) NOT NULL,
     nr_of_residents     INT,
-    postcode            VARCHAR(10),
-    zone_id             INT NOT NULL REFERENCES ptm_zones(zone_id)
+    postcode            VARCHAR(10)
+);
+
+CREATE TABLE ptm_zone_affiliations (
+    affiliation_id  INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    city_id         INT NOT NULL REFERENCES ptm_cities(city_id) ON DELETE CASCADE,
+    zone_id         INT NOT NULL REFERENCES ptm_zones(zone_id) ON DELETE CASCADE
 );
 
 CREATE TABLE ptm_tickets (
     ticket_id           INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     validity_days       INT NOT NULL,
-    zone_id             INT NOT NULL REFERENCES ptm_zones(zone_id),
+    zone_id             INT NOT NULL REFERENCES ptm_zones(zone_id) ON DELETE CASCADE,
     price               FLOAT NOT NULL,
     discount_percentage FLOAT NOT NULL
 );
@@ -113,7 +116,7 @@ CREATE TABLE ptm_passengers (
     phone_number        VARCHAR(15) NOT NULL,
     email               VARCHAR(30) NOT NULL,
     address             VARCHAR(40),
-    ticket_id           INT NOT NULL REFERENCES ptm_tickets(ticket_id),
+    ticket_id           INT NOT NULL REFERENCES ptm_tickets(ticket_id) ON DELETE CASCADE,
     date_of_purchase    DATE NOT NULL,
     valid_till          DATE
 );
@@ -121,7 +124,7 @@ CREATE TABLE ptm_passengers (
 CREATE TABLE ptm_stops (
     stop_id                 INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name                    VARCHAR(30) NOT NULL,
-    zone_id                 INT NOT NULL REFERENCES ptm_zones(zone_id),
+    zone_id                 INT NOT NULL REFERENCES ptm_zones(zone_id) ON DELETE CASCADE,
     interactive_boards      BOOLEAN
 );
 
@@ -131,18 +134,18 @@ CREATE TABLE ptm_lines (
 );
 
 CREATE TABLE ptm_stops_order (
-    line_number         INT NOT NULL REFERENCES ptm_lines(line_number),
-    stop_id             INT NOT NULL REFERENCES ptm_stops(stop_id),
+    line_number         INT NOT NULL REFERENCES ptm_lines(line_number) ON DELETE CASCADE,
+    stop_id             INT NOT NULL REFERENCES ptm_stops(stop_id) ON DELETE CASCADE,
     position_in_order   INT NOT NULL,
     PRIMARY KEY(line_number,stop_id)
 );
 
 CREATE TABLE ptm_courses (
     course_id           INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    line_number         INT NOT NULL REFERENCES ptm_lines(line_number),
-    shuttle_type_id     INT NOT NULL REFERENCES ptm_shuttle_types(shuttle_type_id),
-    bus_id              INT NOT NULL REFERENCES ptm_buses(bus_id),
-    driver_id           INT NOT NULL REFERENCES ptm_drivers(driver_id),
+    line_number         INT NOT NULL REFERENCES ptm_lines(line_number) ON DELETE CASCADE,
+    shuttle_type_id     INT NOT NULL REFERENCES ptm_shuttle_types(shuttle_type_id) ON DELETE CASCADE,
+    bus_id              INT NOT NULL REFERENCES ptm_buses(bus_id) ON DELETE CASCADE,
+    driver_id           INT NOT NULL REFERENCES ptm_drivers(driver_id) ON DELETE CASCADE,
     departure_time      VARCHAR(5) NOT NULL,
     arrival_time        VARCHAR(5) NOT NULL
 );
@@ -169,6 +172,9 @@ $$
 $$;
 
 --Filling tables with sample values
+INSERT INTO ptm_users (email, password) VALUES ('manager@example.com',
+                                                '$2a$10$0j4/JPc0z0ZbpRWexI0mieazV2PB0dxz4j18Arvl0sMBeNNSSoKda');
+
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
     ('12345678901','John','Smith','665321312','john.smith@example.com','22 Acacia Avenue',3400);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
@@ -184,3 +190,26 @@ INSERT INTO ptm_buses (number_plate, purchase_date, service_date, monthly_mainte
     ('PO 12345',date '2019-04-13',date '2021-12-04',1300,200000,1);
 INSERT INTO ptm_buses (number_plate, purchase_date, service_date, monthly_maintenance_cost, cost, model_id) VALUES
     ('PO 54321',date '2016-11-20',date '2021-10-15',1500,250000,2);
+
+INSERT INTO ptm_shuttle_types (type) VALUES ('Working days');
+INSERT INTO ptm_shuttle_types (type) VALUES ('Saturdays');
+INSERT INTO ptm_shuttle_types (type) VALUES ('Sundays and holidays');
+
+INSERT INTO ptm_zones (symbol) VALUES ('A');
+INSERT INTO ptm_zones (symbol) VALUES ('A+B');
+
+INSERT INTO ptm_cities (name, nr_of_residents, postcode) VALUES ('Poznań', 532000, '60-001');
+INSERT INTO ptm_cities (name, nr_of_residents, postcode) VALUES ('Swarzędz', 30000, '62-020');
+INSERT INTO ptm_cities (name, nr_of_residents, postcode) VALUES ('Komorniki', 5000, '62-052');
+
+INSERT INTO ptm_zone_affiliations (city_id, zone_id) VALUES (1,1);
+INSERT INTO ptm_zone_affiliations (city_id, zone_id) VALUES (1,2);
+INSERT INTO ptm_zone_affiliations (city_id, zone_id) VALUES (2,2);
+INSERT INTO ptm_zone_affiliations (city_id, zone_id) VALUES (3,2);
+
+INSERT INTO ptm_lines (line_number, day_line) VALUES (1, true);
+INSERT INTO ptm_lines (line_number, day_line) VALUES (2, true);
+INSERT INTO ptm_lines (line_number, day_line) VALUES (201, false);
+
+INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Kórnicka',1,true);
+INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Kurpińskiego',1,false);

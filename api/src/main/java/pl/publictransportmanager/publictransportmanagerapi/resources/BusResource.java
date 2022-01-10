@@ -44,6 +44,7 @@ public class BusResource {
     @PostMapping("")
     public ResponseEntity<Bus> addBus(@RequestBody Bus bus){
         bus = checkBusModel(bus);
+        bus.setBus_id(null);
         try{
             return new ResponseEntity<>(busRepository.save(bus), HttpStatus.CREATED);
         } catch (Exception e){

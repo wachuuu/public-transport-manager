@@ -36,6 +36,7 @@ public class DriverResource {
     @PostMapping("")
     public ResponseEntity<Driver> addDriver(@RequestBody Driver driver){
         try{
+            driver.setDriver_id(null);
             return new ResponseEntity<>(driverRepository.save(driver), HttpStatus.CREATED);
         } catch (Exception e){
             throw new PtmBadRequestException("Invalid request");

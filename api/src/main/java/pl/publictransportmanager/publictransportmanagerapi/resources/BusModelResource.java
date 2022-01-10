@@ -41,6 +41,7 @@ public class BusModelResource {
     @PostMapping("")
     public ResponseEntity<BusModel> addBusModel(@RequestBody BusModel busModel){
         busModel = checkBrand(busModel);
+        busModel.setModel_id(null);
         try{
             return new ResponseEntity<>(busModelRepository.save(busModel), HttpStatus.CREATED);
         } catch (Exception e){
