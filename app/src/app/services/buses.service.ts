@@ -43,6 +43,11 @@ export class BusesService {
     return this.brands.find((item) => item.brand_id == brand_id);
   }
 
+  public getModelsForBrand(brand_id: number) {
+    this.getModels();
+    return this.models.filter(item => item.brand.brand_id == brand_id);    
+  }
+
   public addBrand(brand: Brand) {
     // TODO: change this after buses patch:
     // brand_id should be null or not exist in database to not override existing brand
