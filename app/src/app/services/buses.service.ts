@@ -89,6 +89,11 @@ export class BusesService {
     return this.models.find((item) => item.model_id == model_id);
   }
 
+  public getBusesForModel(model_id: number) {
+    this.getBuses();
+    return this.buses.filter(item => item.bus_model.model_id == model_id);
+  }
+
   public addModel(model: BusModel) {
     this.http.post<BusModel>(this.modelsUrl, model, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {

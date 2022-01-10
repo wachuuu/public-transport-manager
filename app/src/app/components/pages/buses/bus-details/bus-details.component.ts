@@ -129,12 +129,10 @@ export class BusDetailsComponent implements OnInit {
   editBus(bus: Bus) {
     this.busService.updateBus(bus);
     this.showPanel('view', bus);
-    console.log(bus)
   }
 
   addBus(bus: Bus) {
     this.busService.addBus(bus);
-    console.log(bus)
     this.showPanel('view', bus);
   }
 

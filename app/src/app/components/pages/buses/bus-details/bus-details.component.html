@@ -11,8 +11,8 @@
   </div>
 
   <!-- EDIT -->
-  <div *ngIf="isActivePanel('edit')" class="add-new action-panel">
-    <h3>Add new bus</h3>
+  <div *ngIf="isActivePanel('edit')" class="edit action-panel">
+    <h3>Edit bus</h3>
     <div class="container">
       <form action="post">
         <mat-form-field class="form-input">
@@ -104,7 +104,7 @@
       </form>
     </div>
     <div class="action-buttons">
-      <button mat-raised-button [disabled]="!isFormValid()" (click)="addBus(newBus)">
+      <button mat-raised-button [disabled]="!isFormValid()" (click)="editBus(newBus)">
         Save
       </button>
       <button mat-raised-button (click)="showPanel('none')"> Cancel </button>
