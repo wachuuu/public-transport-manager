@@ -65,6 +65,10 @@ a, a:active, a:visited {
     .container {
       display: flex;
 
+      .checkbox-full-width {
+        flex-basis: 1;
+      }
+
       div {
         margin-right: 2rem;
       }
@@ -84,7 +88,6 @@ a, a:active, a:visited {
 }
 
 .data-table {
-  // width: 100%;
   overflow: auto;
   border: rgba(0, 0, 0, 0.1) 1px solid;
   border-radius: 10px;
