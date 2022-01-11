@@ -49,11 +49,6 @@ export class BusesService {
   }
 
   public addBrand(brand: Brand) {
-    // TODO: change this after buses patch:
-    // brand_id should be null or not exist in database to not override existing brand
-    // temporary set brand_id to null but delete this after patch
-    brand.brand_id = null;
-
     this.http.post<Brand>(this.brandsUrl, brand, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         this.brands = [...this.brands, response.body];

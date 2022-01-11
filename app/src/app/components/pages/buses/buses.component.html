@@ -3,7 +3,7 @@
   <span>back</span>
 </a>
 
-<mat-tab-group [color]="'primary'" class="nav-tabs">
+<mat-tab-group (selectedIndexChange)="onTabChange()" [color]="'primary'" class="nav-tabs">
   <mat-tab label="Buses">
     <div class="tab">
       <h2>Buses</h2>
