@@ -1,47 +1,41 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
-import { Driver } from 'src/app/models/driver.model';
-import { DriversService } from 'src/app/services/drivers.service';
+import { Brand } from 'src/app/models/brand.model';
+import { BusModel } from 'src/app/models/busModel.model';
+import { BusesService } from 'src/app/services/buses.service';
 
 @Component({
-  selector: 'app-drivers',
-  templateUrl: './drivers.component.html',
-  styleUrls: ['./drivers.component.scss']
+  selector: 'app-brand-details',
+  templateUrl: './brand-details.component.html',
+  styleUrls: ['./brand-details.component.scss']
 })
-export class DriversComponent implements OnInit {
+export class BrandDetailsComponent implements OnInit {
 
-  drivers: Driver[];
-  displayedColumns: string[] = ['driver_id', 'name', 'surname', 'email', 'phone_number', 
-                                'more', 'edit', 'delete'];
+  displayedColumns: string[] = ['brand_id', 'name', 'more', 'edit', 'delete'];
+  dataSource: MatTableDataSource<Brand>;
   currentAction: Actions = Actions.None;
-  currentDriver: Driver;
-  newDriver: Driver;
-  blankDriver: Driver = {
-    name: '',
-    surname: '',
-    pesel: '',
-    phone_number: '',
-    email: '',
-    address: '',
-    salary: 0
+  modelsForBrand: BusModel[];
+  currentBrand: Brand;
+  newBrand: Brand;
+
+  blankBrand: Brand = {
+    name: ''
   };
 
-  dataSource: MatTableDataSource<Driver>;
-
-  constructor(private driversService: DriversService) {
+  constructor(private busService: BusesService) {
     this.dataSource = new MatTableDataSource();
-    this.driversService.drivers$.subscribe((data) => {
+    this.busService.brands$.subscribe((data) => {
       this.dataSource.data = data;
     })
   }
-  
+
   ngOnInit(): void {
-    this.driversService.getDrivers();
+    this.busService.getBrands();
   }
-  
-  showPanel(type: string, driver?: Driver) {
-    if (driver) this.currentDriver = driver;
+
+  showPanel(type: string, brand?: Brand) {
+    if (brand) this.currentBrand = brand;
     switch(type) { 
       case 'none': { 
         this.currentAction = Actions.None;
@@ -49,7 +43,7 @@ export class DriversComponent implements OnInit {
       } 
       case 'add-new': { 
         this.currentAction = Actions.AddNew;
-        this.newDriver = JSON.parse(JSON.stringify(this.blankDriver));
+        this.newBrand = JSON.parse(JSON.stringify(this.blankBrand));
         break; 
       }
       case 'view': { 
@@ -58,11 +52,12 @@ export class DriversComponent implements OnInit {
       }
       case 'edit': { 
         this.currentAction = Actions.Edit;
-        this.newDriver = JSON.parse(JSON.stringify(this.currentDriver));
+        this.newBrand = JSON.parse(JSON.stringify(this.currentBrand));
         break; 
       }
       case 'delete': { 
         this.currentAction = Actions.Delete;
+        this.modelsForBrand = this.busService.getModelsForBrand(this.currentBrand.brand_id);
         break; 
       }
       default: { 
@@ -105,18 +100,24 @@ export class DriversComponent implements OnInit {
     }
   }
 
-  deleteDriver(driver: Driver) {
-    this.driversService.deleteDriver(driver.driver_id);
+  editBrand(brand: Brand) {
+    this.busService.updateBrand(brand);
+    this.showPanel('view', brand);
+  }
+
+  addBrand(brand: Brand) {
+    this.busService.addBrand(brand);
+    this.showPanel('view', brand);
+  }
+
+  deleteBrand(brand: Brand) {
+    this.busService.deleteBrand(brand.brand_id);
     this.showPanel('none');
   }
 
-  addDriver(driver: Driver) {
-    this.driversService.addDriver(driver);
-    this.showPanel('view', driver);
-  }
-
-  editDriver(driver: Driver) {
-    this.driversService.updateDriver(driver)
-    this.showPanel('view', driver);
+  isFormValid() {
+    if (this.newBrand.name == '') {
+        return false;
+    } else return true;
   }
 }

@@ -1,0 +1,33 @@
+<a routerLink="/">
+  <mat-icon>arrow_back_ios</mat-icon>
+  <span>back</span>
+</a>
+
+<mat-tab-group (selectedIndexChange)="onTabChange()" [color]="'primary'" class="nav-tabs">
+  <mat-tab label="Buses">
+    <div class="tab">
+      <h2>Buses</h2>
+      <p>Here you can modify, delete, view or insert data related to buses</p>
+
+      <app-bus-details></app-bus-details>
+    </div>
+  </mat-tab>
+  
+  <mat-tab label="Bus Models">
+    <div class="tab">
+      <h2>Bus Models</h2>
+      <p>Here you can modify, delete, view or insert data related to bus models</p>
+
+      <app-bus-model-details></app-bus-model-details>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Brands">
+    <div class="tab">
+      <h2>Bus Brands</h2>
+      <p>Here you can modify, delete, view or insert data related to bus brands</p>
+
+      <app-brand-details></app-brand-details>
+    </div>
+  </mat-tab>
+</mat-tab-group>
