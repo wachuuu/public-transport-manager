@@ -43,7 +43,7 @@ public class BusResource {
 
     @PostMapping("")
     public ResponseEntity<Bus> addBus(@RequestBody Bus bus){
-        bus = checkBusModel(bus);
+        checkBusModel(bus);
         bus.setBus_id(null);
         try{
             return new ResponseEntity<>(busRepository.save(bus), HttpStatus.CREATED);
@@ -56,7 +56,7 @@ public class BusResource {
     public ResponseEntity<Bus> updateBus(@PathVariable("busId") Integer busId,
                                          @RequestBody Bus bus){
         if (busRepository.existsById(busId)){
-            bus = checkBusModel(bus);
+            checkBusModel(bus);
             bus.setBus_id(busId);
             try{
                 return new ResponseEntity<>(busRepository.save(bus), HttpStatus.OK);
@@ -77,7 +77,7 @@ public class BusResource {
             throw new PtmResourceNotFoundException("Bus not found");
     }
 
-    public Bus checkBusModel(Bus bus) {
+    public void checkBusModel(Bus bus) {
         if (bus.getBus_model().getModel_id() != null) {
             Optional<BusModel> busModelFound = busModelRepository.findById(bus.getBus_model().getModel_id());
             if (busModelFound.isPresent()){
@@ -93,6 +93,5 @@ public class BusResource {
                 throw new PtmBadRequestException("Invalid request");
             }
         }
-        return bus;
     }
 }

@@ -40,9 +40,9 @@ public class StopResource {
 
     @PostMapping("")
     public ResponseEntity<Stop> addStop(@RequestBody Stop stop){
-        stop = checkZone(stop);
-        stop.setStop_id(null);
         try{
+            stop = checkZone(stop);
+            stop.setStop_id(null);
             return new ResponseEntity<>(stopRepository.save(stop), HttpStatus.CREATED);
         } catch (Exception e){
             throw new PtmBadRequestException("Invalid request");
@@ -53,9 +53,9 @@ public class StopResource {
     public ResponseEntity<Stop> updateStop(@PathVariable("stopId") Integer stopId,
                                            @RequestBody Stop stop){
         if (stopRepository.existsById(stopId)){
-            stop = checkZone(stop);
-            stop.setStop_id(stopId);
             try {
+                stop = checkZone(stop);
+                stop.setStop_id(stopId);
                 return new ResponseEntity<>(stopRepository.save(stop), HttpStatus.OK);
             } catch (Exception e) {
                 throw new PtmBadRequestException("Invalid request");

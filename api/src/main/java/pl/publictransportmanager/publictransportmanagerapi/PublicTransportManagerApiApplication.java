@@ -51,6 +51,8 @@ public class PublicTransportManagerApiApplication {
 		registrationBean.addUrlPatterns("/api/stops/*");
 		registrationBean.addUrlPatterns("/api/cities/*");
 		registrationBean.addUrlPatterns("/api/zone_affiliations/*");
+		registrationBean.addUrlPatterns("/api/tickets/*");
+		registrationBean.addUrlPatterns("/api/passengers/*");
 		return registrationBean;
 	}
 }

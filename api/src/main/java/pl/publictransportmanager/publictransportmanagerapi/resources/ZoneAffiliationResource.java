@@ -43,8 +43,8 @@ public class ZoneAffiliationResource {
 
     @PostMapping("")
     public ResponseEntity<ZoneAffiliation> addZoneAffiliation(@RequestBody ZoneAffiliation zoneAffiliation){
-        zoneAffiliation = checkCity(zoneAffiliation);
-        zoneAffiliation = checkZone(zoneAffiliation);
+        checkCity(zoneAffiliation);
+        checkZone(zoneAffiliation);
         zoneAffiliation.setAffiliation_id(null);
         try{
             return new ResponseEntity<>(zoneAffiliationRepository.save(zoneAffiliation), HttpStatus.CREATED);
@@ -57,8 +57,8 @@ public class ZoneAffiliationResource {
     public ResponseEntity<ZoneAffiliation> updateZoneAffiliation(@PathVariable("affiliationId") Integer affiliationId,
                                                                  @RequestBody ZoneAffiliation zoneAffiliation){
         if (zoneAffiliationRepository.existsById(affiliationId)){
-            zoneAffiliation = checkCity(zoneAffiliation);
-            zoneAffiliation = checkZone(zoneAffiliation);
+            checkCity(zoneAffiliation);
+            checkZone(zoneAffiliation);
             zoneAffiliation.setAffiliation_id(affiliationId);
             try {
                 return new ResponseEntity<>(zoneAffiliationRepository.save(zoneAffiliation), HttpStatus.OK);
@@ -79,7 +79,7 @@ public class ZoneAffiliationResource {
             throw new PtmResourceNotFoundException("Zone affiliation not found");
     }
 
-    public ZoneAffiliation checkCity(ZoneAffiliation zoneAffiliation) {
+    public void checkCity(ZoneAffiliation zoneAffiliation) {
         if (zoneAffiliation.getCity().getCity_id() != null) {
             Optional<City> cityFound = cityRepository.findById(zoneAffiliation.getCity().getCity_id());
             if (cityFound.isPresent())
@@ -94,10 +94,9 @@ public class ZoneAffiliationResource {
                 throw new PtmBadRequestException("Invalid request");
             }
         }
-        return zoneAffiliation;
     }
 
-    public ZoneAffiliation checkZone(ZoneAffiliation zoneAffiliation) {
+    public void checkZone(ZoneAffiliation zoneAffiliation) {
         if (zoneAffiliation.getZone().getZone_id() != null) {
             Optional<Zone> zoneFound = zoneRepository.findById(zoneAffiliation.getZone().getZone_id());
             if (zoneFound.isPresent())
@@ -112,6 +111,5 @@ public class ZoneAffiliationResource {
                 throw new PtmBadRequestException("Invalid request");
             }
         }
-        return zoneAffiliation;
     }
 }

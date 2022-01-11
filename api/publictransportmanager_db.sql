@@ -102,10 +102,11 @@ CREATE TABLE ptm_zone_affiliations (
 
 CREATE TABLE ptm_tickets (
     ticket_id           INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name                VARCHAR(40) NOT NULL,
     validity_days       INT NOT NULL,
     zone_id             INT NOT NULL REFERENCES ptm_zones(zone_id) ON DELETE CASCADE,
     price               FLOAT NOT NULL,
-    discount_percentage FLOAT NOT NULL
+    concessionary       BOOLEAN NOT NULL
 );
 
 CREATE TABLE ptm_passengers (
@@ -134,10 +135,10 @@ CREATE TABLE ptm_lines (
 );
 
 CREATE TABLE ptm_stops_order (
+    id                  INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     line_number         INT NOT NULL REFERENCES ptm_lines(line_number) ON DELETE CASCADE,
     stop_id             INT NOT NULL REFERENCES ptm_stops(stop_id) ON DELETE CASCADE,
-    position_in_order   INT NOT NULL,
-    PRIMARY KEY(line_number,stop_id)
+    position_in_order   INT NOT NULL
 );
 
 CREATE TABLE ptm_courses (
@@ -213,3 +214,19 @@ INSERT INTO ptm_lines (line_number, day_line) VALUES (201, false);
 
 INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Kórnicka',1,true);
 INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Kurpińskiego',1,false);
+
+INSERT INTO ptm_tickets (name, validity_days, zone_id, price, concessionary) VALUES
+    ('Full-fare monthly zone A', 30, 1, 120, false);
+INSERT INTO ptm_tickets (name, validity_days, zone_id, price, concessionary) VALUES
+    ('Half-fare monthly zone A', 30, 1, 60, true);
+INSERT INTO ptm_tickets (name, validity_days, zone_id, price, concessionary) VALUES
+    ('Half-fare semestral zone A', 120, 1, 170, true);
+INSERT INTO ptm_tickets (name, validity_days, zone_id, price, concessionary) VALUES
+    ('Full-fare annual zone A+B', 366, 2, 950, false);
+INSERT INTO ptm_tickets (name, validity_days, zone_id, price, concessionary) VALUES
+    ('Half-fare annual zone A+B', 366, 2, 475, true);
+
+INSERT INTO ptm_passengers (pesel, name, surname, phone_number, email, address, ticket_id, date_of_purchase) VALUES
+    ('00123123123', 'Harry','Potter','666987654','potter@example.com','4 Privet Drive',3,date '2021-02-02');
+INSERT INTO ptm_passengers (pesel, name, surname, phone_number, email, address, ticket_id, date_of_purchase) VALUES
+    ('98765432100', 'Albus','Dumbledore','456123789','dumbledore@example.com','1 Hogwarts Street',4,date '2022-01-11');
