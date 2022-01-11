@@ -45,6 +45,14 @@ public class PublicTransportManagerApiApplication {
 		registrationBean.addUrlPatterns("/api/brands/*");
 		registrationBean.addUrlPatterns("/api/bus_models/*");
 		registrationBean.addUrlPatterns("/api/buses/*");
+		registrationBean.addUrlPatterns("/api/shuttle_types/*");
+		registrationBean.addUrlPatterns("/api/zones/*");
+		registrationBean.addUrlPatterns("/api/lines/*");
+		registrationBean.addUrlPatterns("/api/stops/*");
+		registrationBean.addUrlPatterns("/api/cities/*");
+		registrationBean.addUrlPatterns("/api/zone_affiliations/*");
+		registrationBean.addUrlPatterns("/api/tickets/*");
+		registrationBean.addUrlPatterns("/api/passengers/*");
 		return registrationBean;
 	}
 }
