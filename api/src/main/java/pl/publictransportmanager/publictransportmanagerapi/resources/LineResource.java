@@ -35,8 +35,7 @@ public class LineResource {
 
     @PostMapping("")
     public ResponseEntity<Line> addLine(@RequestBody Line line){
-        if (lineRepository.existsById(line.getLine_number()))
-            throw new PtmBadRequestException("Invalid request");
+        line.setLineNumber(null);
         try{
             return new ResponseEntity<>(lineRepository.save(line), HttpStatus.CREATED);
         } catch (Exception e){
@@ -48,7 +47,7 @@ public class LineResource {
     public ResponseEntity<Line> updateLine(@PathVariable("lineId") Integer lineId,
                                            @RequestBody Line line){
         if (lineRepository.existsById(lineId)) {
-            line.setLine_number(lineId);
+            line.setLineNumber(lineId);
             try {
                 return new ResponseEntity<>(lineRepository.save(line), HttpStatus.OK);
             } catch (Exception e) {

@@ -41,7 +41,7 @@ public class TicketResource {
     @PostMapping("")
     public ResponseEntity<Ticket> addTicket(@RequestBody Ticket ticket){
         try{
-            ticket = checkZone(ticket);
+            checkZone(ticket);
             ticket.setTicket_id(null);
             return new ResponseEntity<>(ticketRepository.save(ticket), HttpStatus.CREATED);
         } catch (Exception e){
@@ -54,7 +54,7 @@ public class TicketResource {
                                                @RequestBody Ticket ticket){
         if (ticketRepository.existsById(ticketId)){
             try {
-                ticket = checkZone(ticket);
+                checkZone(ticket);
                 ticket.setTicket_id(ticketId);
                 return new ResponseEntity<>(ticketRepository.save(ticket), HttpStatus.OK);
             } catch (Exception e) {

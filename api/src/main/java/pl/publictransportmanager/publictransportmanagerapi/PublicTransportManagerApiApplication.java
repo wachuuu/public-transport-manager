@@ -40,19 +40,9 @@ public class PublicTransportManagerApiApplication {
 		FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
 		AuthFilter authFilter = new AuthFilter();
 		registrationBean.setFilter(authFilter);
-		registrationBean.addUrlPatterns("/api/transport/*");
-		registrationBean.addUrlPatterns("/api/drivers/*");
-		registrationBean.addUrlPatterns("/api/brands/*");
-		registrationBean.addUrlPatterns("/api/bus_models/*");
-		registrationBean.addUrlPatterns("/api/buses/*");
-		registrationBean.addUrlPatterns("/api/shuttle_types/*");
-		registrationBean.addUrlPatterns("/api/zones/*");
-		registrationBean.addUrlPatterns("/api/lines/*");
-		registrationBean.addUrlPatterns("/api/stops/*");
-		registrationBean.addUrlPatterns("/api/cities/*");
-		registrationBean.addUrlPatterns("/api/zone_affiliations/*");
-		registrationBean.addUrlPatterns("/api/tickets/*");
-		registrationBean.addUrlPatterns("/api/passengers/*");
+		registrationBean.addUrlPatterns("/api/transport/*","/api/drivers/*","/api/brands/*","/api/bus_models/*",
+				"/api/buses/*","/api/shuttle_types/*","/api/zones/*","/api/lines/*","/api/stops/*","/api/cities/*",
+				"/api/zone_affiliations/*","/api/tickets/*","/api/passengers/*","/api/stops_order/*","/api/courses/*");
 		return registrationBean;
 	}
 }
