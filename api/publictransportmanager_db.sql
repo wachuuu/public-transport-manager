@@ -174,7 +174,7 @@ $$;
 
 --Filling tables with sample values
 INSERT INTO ptm_users (email, password) VALUES ('manager@example.com',
-                                                '$2a$10$0j4/JPc0z0ZbpRWexI0mieazV2PB0dxz4j18Arvl0sMBeNNSSoKda');
+    '$2a$10$0j4/JPc0z0ZbpRWexI0mieazV2PB0dxz4j18Arvl0sMBeNNSSoKda');
 
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
     ('12345678901','John','Smith','665321312','john.smith@example.com','22 Acacia Avenue',3400);
@@ -213,7 +213,17 @@ INSERT INTO ptm_lines (line_number, day_line) VALUES (2, true);
 INSERT INTO ptm_lines (line_number, day_line) VALUES (201, false);
 
 INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Kórnicka',1,true);
+INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Most Teatralny',1,true);
 INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Kurpińskiego',1,false);
+INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Baraniaka',1,false);
+INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Rondo Rataje',1,true);
+
+INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (1,1,1);
+INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (1,2,2);
+INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (1,3,3);
+INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (2,4,1);
+INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (2,1,2);
+INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (2,5,3);
 
 INSERT INTO ptm_tickets (name, validity_days, zone_id, price, concessionary) VALUES
     ('Full-fare monthly zone A', 30, 1, 120, false);
@@ -230,3 +240,16 @@ INSERT INTO ptm_passengers (pesel, name, surname, phone_number, email, address, 
     ('00123123123', 'Harry','Potter','666987654','potter@example.com','4 Privet Drive',3,date '2021-02-02');
 INSERT INTO ptm_passengers (pesel, name, surname, phone_number, email, address, ticket_id, date_of_purchase) VALUES
     ('98765432100', 'Albus','Dumbledore','456123789','dumbledore@example.com','1 Hogwarts Street',4,date '2022-01-11');
+
+INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+    (1,1,1,1,'09:45','10:38');
+INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+    (1,1,2,2,'12:21','13:14');
+INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+    (2,3,2,1,'15:11','16:02');
+INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+    (2,3,1,2,'17:40','18:31');
+INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+    (201,2,1,1,'02:10','03:15');
+INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+    (201,2,2,2,'01:15','02:20');

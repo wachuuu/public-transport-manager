@@ -77,7 +77,7 @@ public class BusResource {
             throw new PtmResourceNotFoundException("Bus not found");
     }
 
-    public void checkBusModel(Bus bus) {
+    public Bus checkBusModel(Bus bus) {
         if (bus.getBus_model().getModel_id() != null) {
             Optional<BusModel> busModelFound = busModelRepository.findById(bus.getBus_model().getModel_id());
             if (busModelFound.isPresent()){
@@ -93,5 +93,6 @@ public class BusResource {
                 throw new PtmBadRequestException("Invalid request");
             }
         }
+        return bus;
     }
 }
