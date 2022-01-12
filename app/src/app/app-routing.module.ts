@@ -4,6 +4,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { BusesComponent } from './components/pages/buses/buses.component';
 import { DriversComponent } from './components/pages/drivers/drivers.component';
+import { ShuttleTypesComponent } from './components/pages/shuttle-types/shuttle-types.component';
 import { AuthGuard } from './helpers/auth.guard';
 
 
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: '', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'drivers', component: DriversComponent, canActivate: [AuthGuard] },
   { path: 'buses', component: BusesComponent, canActivate: [AuthGuard] },
+  { path: 'shuttle-types', component: ShuttleTypesComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' },
 ];
 

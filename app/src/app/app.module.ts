@@ -25,6 +25,7 @@ import { BusDetailsComponent } from './components/pages/buses/bus-details/bus-de
 import { BusModelDetailsComponent } from './components/pages/buses/bus-model-details/bus-model-details.component';
 import { BusesComponent } from './components/pages/buses/buses.component';
 import { DriversComponent } from './components/pages/drivers/drivers.component';
+import { ShuttleTypesComponent } from './components/pages/shuttle-types/shuttle-types.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
 
@@ -39,6 +40,7 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
     BusDetailsComponent,
     BrandDetailsComponent,
     BusModelDetailsComponent,
+    ShuttleTypesComponent,
   ],
   imports: [
     BrowserModule,
