@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
+import { Passenger } from 'src/app/models/passenger.model';
 import { Ticket } from 'src/app/models/ticket.model';
 import { Zone } from 'src/app/models/zone.model';
+import { PassengersService } from 'src/app/services/passengers.service';
 import { TicketsService } from 'src/app/services/tickets.service';
 import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service';
 
@@ -18,6 +20,7 @@ export class TicketsComponent implements OnInit {
   dataSource: MatTableDataSource<Ticket>;
   currentAction: Actions = Actions.None;
   zones: Zone[];
+  passengersForTicket: Passenger[];
   currentTicket: Ticket;
   newTicket: Ticket;
 
@@ -29,7 +32,9 @@ export class TicketsComponent implements OnInit {
     concessionary: false
   };
 
-  constructor(private ticketsService: TicketsService, private zonesAndCitiesService: ZonesAndCitiesService) {
+  constructor(private ticketsService: TicketsService, 
+      private zonesAndCitiesService: ZonesAndCitiesService, 
+      private passengersService: PassengersService) {
     this.dataSource = new MatTableDataSource();
     this.ticketsService.tickets$.subscribe((data) => {
       this.dataSource.data = data;
@@ -70,6 +75,7 @@ export class TicketsComponent implements OnInit {
       }
       case 'delete': { 
         this.currentAction = Actions.Delete;
+        this.getPassengersForTicket(this.currentTicket.ticket_id)
         break; 
       }
       default: { 
@@ -125,6 +131,10 @@ export class TicketsComponent implements OnInit {
   deleteTicket(ticket: Ticket) {
     this.ticketsService.deleteTicket(ticket.ticket_id);
     this.showPanel('none');
+  }
+
+  getPassengersForTicket(ticket_id) {
+    this.passengersForTicket = this.passengersService.getPassengersForTicket(ticket_id);
   }
 
   isFormValid() {

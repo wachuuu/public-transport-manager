@@ -132,10 +132,10 @@
     <h3>Delete ticket</h3>
     <p>Are you sure you want to delete ticket <strong>{{ currentTicket.name }}</strong>?</p>
     <p>This operation cannot be undone</p>
-    <!-- <p class="warn" *ngIf="passengersForTicket.length > 0">
+    <p class="warn" *ngIf="passengersForTicket.length > 0">
       <strong>NOTE</strong>: You will also delete all passengers who have this ticket!
-      (<span *ngFor="let bus of busesForModel; let isLast=last">{{ bus.number_plate }}{{ isLast ? '' : ', ' }}</span>)
-    </p> -->
+      (<span *ngFor="let passenger of passengersForTicket; let isLast=last">{{ passenger.surname }}{{ isLast ? '' : ', ' }}</span>)
+    </p>
     <div class="action-buttons">
       <button mat-raised-button color="warn" (click)="deleteTicket(currentTicket)"> Delete </button>
       <button mat-raised-button (click)="showPanel('none')"> Cancel </button>
