@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { City } from '../models/city.model';
 import { ZoneAffiliation } from '../models/zone-affiliation.model';
+import { ZoneWithCities } from '../models/zone-with-cities.model';
 import { Zone } from '../models/zone.model';
 
 @Injectable({
@@ -27,10 +28,41 @@ export class ZonesAndCitiesService {
   get zones() { return this._zones$.getValue(); }
   set zones(value) { this._zones$.next(value); }
 
+  private readonly _zonesWithCities$ = new BehaviorSubject<ZoneWithCities[]>([]);
+  readonly zonesWithCities$ = this._zonesWithCities$.asObservable();
+  get zonesWithCities() { return this._zonesWithCities$.getValue(); }
+  set zonesWithCities(value) { this._zonesWithCities$.next(value); }
+
   private readonly _affiliations$ = new BehaviorSubject<ZoneAffiliation[]>([]);
   readonly affiliations$ = this._affiliations$.asObservable();
   get affiliations() { return this._affiliations$.getValue(); }
   set affiliations(value) { this._affiliations$.next(value); }
+
+  public getZonesWithCities() {
+    let _zones: Zone[];
+    let zonesWithCities: ZoneWithCities[] = [];
+    
+    let affiliations: ZoneAffiliation[];
+    this.http.get<Zone[]>(this.zonesUrl, { observe: 'response' }).subscribe((response) => {
+      if (response.ok) {
+        _zones = response.body;
+        this.http.get<ZoneAffiliation[]>(this.affiliationsUrl, { observe: 'response' }).subscribe((response) => {
+          if (response.ok) {
+            affiliations = response.body;
+            _zones.forEach((zone) => {
+              let _zoneWithCities: ZoneWithCities = {};
+              _zoneWithCities.zone = zone;
+              _zoneWithCities.cities = affiliations
+                .filter(item => item.zone.zone_id == zone.zone_id)
+                .map((item) => {return item.city})
+              zonesWithCities.push(_zoneWithCities);
+            })
+            this._zonesWithCities$.next(zonesWithCities);
+          }
+        })
+      }
+    })
+  }
 
   public getCities() {
     this.http.get<City[]>(this.citiesUrl, { observe: 'response' }).subscribe((response) => {
@@ -92,6 +124,23 @@ export class ZonesAndCitiesService {
     })
   }
 
+  public addZoneWithCities(zone: Zone, cities: City[]) {
+    this.http.post<Zone>(this.zonesUrl, zone, { observe: 'response' }).subscribe((response) => {
+      if (response.ok) {
+        this.zones = [...this.zones, response.body];
+        let zone_id = response.body.zone_id;
+
+        cities.forEach((item) => {
+          let affiliation: ZoneAffiliation = {
+            zone: { zone_id: zone_id },
+            city: { city_id: item.city_id }
+          };
+          this.addAffiliation(affiliation);
+        })
+      }
+    })
+  }
+
   public updateZone(zone: Zone) {
     this.http.put<Zone>(`${this.zonesUrl}/${zone.zone_id}`, zone, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
@@ -99,6 +148,7 @@ export class ZonesAndCitiesService {
         if (index > -1) {
           this.zones[index] = response.body;
           this._zones$.next(this.zones);
+          this.getZonesWithCities();
         }
       }
     })
@@ -110,6 +160,7 @@ export class ZonesAndCitiesService {
         let index = this.zones.findIndex((item) => item.zone_id == zone_id);
         this.zones.splice(index);
         this._zones$.next(this.zones);
+        this.getZonesWithCities();
       }
     })
   }
@@ -144,6 +195,7 @@ export class ZonesAndCitiesService {
     this.http.post<ZoneAffiliation>(this.affiliationsUrl, affiliation, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         this.affiliations = [...this.affiliations, response.body];
+        this.getZonesWithCities();
       }
     })
   }
@@ -155,6 +207,7 @@ export class ZonesAndCitiesService {
         if (index > -1) {
           this.affiliations[index] = response.body;
           this._affiliations$.next(this.affiliations);
+          this.getZonesWithCities();
         }
       }
     })
@@ -164,8 +217,18 @@ export class ZonesAndCitiesService {
     this.http.delete(`${this.affiliationsUrl}/${affiliation_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.affiliations.findIndex((item) => item.affiliation_id == affiliation_id);
-        this.affiliations.splice(index);
+        this.affiliations.splice(index);        
         this._affiliations$.next(this.affiliations);
+        this.getZonesWithCities();
+      }
+    })
+  }
+
+  public deleteAffiliationByCityAndZone(zone_id: number, city_id: number) {
+    this.http.get<ZoneAffiliation[]>(this.affiliationsUrl, { observe: 'response' }).subscribe((response) => {
+      if (response.ok) {
+        let affiliation = response.body.find(item => item.zone.zone_id == zone_id && item.city.city_id == city_id);
+        if (affiliation) this.deleteAffiliation(affiliation.affiliation_id);
       }
     })
   }
