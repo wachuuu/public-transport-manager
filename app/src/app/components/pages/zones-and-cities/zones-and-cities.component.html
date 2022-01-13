@@ -1,0 +1,24 @@
+<a routerLink="/">
+  <mat-icon>arrow_back_ios</mat-icon>
+  <span>back</span>
+</a>
+
+<mat-tab-group (selectedIndexChange)="onTabChange()" [color]="'primary'" class="nav-tabs">
+  <mat-tab label="Zones">
+    <div class="tab">
+      <h2>Zones</h2>
+      <p>Here you can modify, delete, view or insert data related to bus zones</p>
+
+      <app-zones></app-zones>
+    </div>
+  </mat-tab>
+  
+  <mat-tab label="Cities">
+    <div class="tab">
+      <h2>Cities</h2>
+      <p>Here you can modify, delete, view or insert data related to cities managed by public transport</p>
+
+      <app-cities></app-cities>
+    </div>
+  </mat-tab>
+</mat-tab-group>
