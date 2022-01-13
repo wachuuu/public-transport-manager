@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { City } from 'src/app/models/city.model';
+import { Ticket } from 'src/app/models/ticket.model';
 import { ZoneAffiliation } from 'src/app/models/zone-affiliation.model';
 import { ZoneWithCities } from 'src/app/models/zone-with-cities.model';
+import { TicketsService } from 'src/app/services/tickets.service';
 import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service';
 
 @Component({
@@ -18,6 +20,7 @@ export class ZonesComponent implements OnInit {
   dataSource: MatTableDataSource<ZoneWithCities>;
   currentAction: Actions = Actions.None;
   affiliations: ZoneAffiliation[];
+  ticketsForZone: Ticket[];
   allCities: City[];
   selectedCities: number[] = [];
   currentZone: ZoneWithCities;
@@ -30,7 +33,7 @@ export class ZonesComponent implements OnInit {
     cities: []
   }
 
-  constructor(private zonesAndCitiesService: ZonesAndCitiesService) {
+  constructor(private zonesAndCitiesService: ZonesAndCitiesService, private ticketsService: TicketsService) {
     this.dataSource = new MatTableDataSource();
     this.zonesAndCitiesService.zonesWithCities$.subscribe((data) => {
       this.dataSource.data = data;
@@ -50,6 +53,7 @@ export class ZonesComponent implements OnInit {
     this.zonesAndCitiesService.getCities();
     this.zonesAndCitiesService.getAffiliations();
     this.zonesAndCitiesService.getZonesWithCities();
+    this.ticketsService.getTickets();
   }
 
   showPanel(type: string, zone?: ZoneWithCities) {
@@ -77,6 +81,7 @@ export class ZonesComponent implements OnInit {
       }
       case 'delete': { 
         this.currentAction = Actions.Delete;
+        this.getTicketsForZone(this.currentZone.zone.zone_id);
         break; 
       }
       default: { 
@@ -175,6 +180,10 @@ export class ZonesComponent implements OnInit {
 
   removeCityFromZone(zone_id: number, city_id: number) {
     this.zonesAndCitiesService.deleteAffiliationByCityAndZone(zone_id, city_id);
+  }
+
+  getTicketsForZone(zone_id: number) {
+    this.ticketsForZone = this.ticketsService.getTicketsForZone(zone_id);
   }
 
   isFormValid() {

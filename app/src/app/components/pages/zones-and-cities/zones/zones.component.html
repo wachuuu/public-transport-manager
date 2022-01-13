@@ -93,6 +93,10 @@
     <h3>Delete bus model</h3>
     <p>Are you sure you want to delete zone <strong>{{ currentZone.zone.symbol }}</strong>?</p>
     <p>This operation cannot be undone</p>
+    <p class="warn" *ngIf="ticketsForZone.length > 0">
+      <strong>NOTE</strong>: You will also delete all tickets and passengers that are valid in this zone!
+      (<span *ngFor="let ticket of ticketsForZone; let isLast=last">{{ ticket.name }}{{ isLast ? '' : ', ' }}</span>)
+    </p>
     <div class="action-buttons">
       <button mat-raised-button color="warn" (click)="deleteZone(currentZone)"> Delete </button>
       <button mat-raised-button (click)="showPanel('none')"> Cancel </button>

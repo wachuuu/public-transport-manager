@@ -72,7 +72,7 @@
     <p>This operation cannot be undone</p>
     <p class="warn" *ngIf="modelsForBrand.length > 0">
       <strong>NOTE</strong>: You will also delete all models and buses that are assigned to this brand!
-      ( <span *ngFor="let model of modelsForBrand">{{ model.model_name }} </span>)
+      (<span *ngFor="let model of modelsForBrand; let isLast=last">{{ model.model_name }}{{ isLast ? '' : ', ' }}</span>)
     </p>
     <div class="action-buttons">
       <button mat-raised-button color="warn" (click)="deleteBrand(currentBrand)"> Delete </button>

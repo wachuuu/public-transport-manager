@@ -79,7 +79,7 @@
     <p>This operation cannot be undone</p>
     <p class="warn" *ngIf="coursesForShuttleType.length > 0">
       <strong>NOTE</strong>: You will also delete all courses that are assigned to this shuttle type!
-      ( <span *ngFor="let course of coursesForShuttleType">{{ course.name }} </span>)
+      (<span *ngFor="let course of coursesForShuttleType; let isLast=last">{{ course.name }}{{ isLast ? '' : ', ' }}</span>)
     </p>
     <div class="action-buttons">
       <button mat-raised-button color="warn" (click)="deleteShuttleType(currentType)"> Delete </button>
