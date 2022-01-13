@@ -41,7 +41,7 @@ public class StopResource {
     @PostMapping("")
     public ResponseEntity<Stop> addStop(@RequestBody Stop stop){
         try{
-            stop = checkZone(stop);
+            checkZone(stop);
             stop.setStop_id(null);
             return new ResponseEntity<>(stopRepository.save(stop), HttpStatus.CREATED);
         } catch (Exception e){
@@ -54,7 +54,7 @@ public class StopResource {
                                            @RequestBody Stop stop){
         if (stopRepository.existsById(stopId)){
             try {
-                stop = checkZone(stop);
+                checkZone(stop);
                 stop.setStop_id(stopId);
                 return new ResponseEntity<>(stopRepository.save(stop), HttpStatus.OK);
             } catch (Exception e) {

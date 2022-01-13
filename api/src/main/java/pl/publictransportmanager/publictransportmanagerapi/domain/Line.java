@@ -11,7 +11,8 @@ import javax.persistence.*;
 @ToString
 public class Line {
     @Id
-    private Integer line_number;
+    @Column( name = "line_number")
+    private Integer lineNumber;
     private Boolean day_line;
 
     public Line() {}
