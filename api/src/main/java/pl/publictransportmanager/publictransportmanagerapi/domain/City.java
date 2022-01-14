@@ -15,7 +15,6 @@ public class City {
     private Integer city_id;
     private String name;
     private Integer nr_of_residents;
-    private String postcode;
 
     public City() {}
 }

@@ -16,14 +16,14 @@ public class StopOrder {
 
     @ManyToOne
     @JoinColumn(
-            name = "lineNumber",
-            referencedColumnName = "line_number"
+            name = "LineId",
+            referencedColumnName = "line_id"
     )
     private Line line;
 
     @ManyToOne
     @JoinColumn(
-            name = "stop_id",
+            name = "stopId",
             referencedColumnName = "stop_id"
     )
     private Stop stop;

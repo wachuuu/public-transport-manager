@@ -90,8 +90,7 @@ CREATE TABLE ptm_zones (
 CREATE TABLE ptm_cities (
     city_id             INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name                VARCHAR(30) NOT NULL,
-    nr_of_residents     INT,
-    postcode            VARCHAR(10)
+    nr_of_residents     INT
 );
 
 CREATE TABLE ptm_zone_affiliations (
@@ -130,20 +129,21 @@ CREATE TABLE ptm_stops (
 );
 
 CREATE TABLE ptm_lines (
-    line_number     INT PRIMARY KEY,
+    line_id         INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    line_number     INT NOT NULL,
     day_line        BOOLEAN NOT NULL
 );
 
 CREATE TABLE ptm_stops_order (
     id                  INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    line_number         INT NOT NULL REFERENCES ptm_lines(line_number) ON DELETE CASCADE,
+    line_id             INT NOT NULL REFERENCES ptm_lines(line_id) ON DELETE CASCADE,
     stop_id             INT NOT NULL REFERENCES ptm_stops(stop_id) ON DELETE CASCADE,
     position_in_order   INT NOT NULL
 );
 
 CREATE TABLE ptm_courses (
     course_id           INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    line_number         INT NOT NULL REFERENCES ptm_lines(line_number) ON DELETE CASCADE,
+    line_id             INT NOT NULL REFERENCES ptm_lines(line_id) ON DELETE CASCADE,
     shuttle_type_id     INT NOT NULL REFERENCES ptm_shuttle_types(shuttle_type_id) ON DELETE CASCADE,
     bus_id              INT NOT NULL REFERENCES ptm_buses(bus_id) ON DELETE CASCADE,
     driver_id           INT NOT NULL REFERENCES ptm_drivers(driver_id) ON DELETE CASCADE,
@@ -199,9 +199,9 @@ INSERT INTO ptm_shuttle_types (type) VALUES ('Sundays and holidays');
 INSERT INTO ptm_zones (symbol) VALUES ('A');
 INSERT INTO ptm_zones (symbol) VALUES ('A+B');
 
-INSERT INTO ptm_cities (name, nr_of_residents, postcode) VALUES ('Poznań', 532000, '60-001');
-INSERT INTO ptm_cities (name, nr_of_residents, postcode) VALUES ('Swarzędz', 30000, '62-020');
-INSERT INTO ptm_cities (name, nr_of_residents, postcode) VALUES ('Komorniki', 5000, '62-052');
+INSERT INTO ptm_cities (name, nr_of_residents) VALUES ('Poznań', 532000);
+INSERT INTO ptm_cities (name, nr_of_residents) VALUES ('Swarzędz', 30000);
+INSERT INTO ptm_cities (name, nr_of_residents) VALUES ('Komorniki', 5000);
 
 INSERT INTO ptm_zone_affiliations (city_id, zone_id) VALUES (1,1);
 INSERT INTO ptm_zone_affiliations (city_id, zone_id) VALUES (1,2);
@@ -218,12 +218,12 @@ INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Kurpińskiego
 INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Baraniaka',1,false);
 INSERT INTO ptm_stops (name, zone_id, interactive_boards) VALUES ('Rondo Rataje',1,true);
 
-INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (1,1,1);
-INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (1,2,2);
-INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (1,3,3);
-INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (2,4,1);
-INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (2,1,2);
-INSERT INTO ptm_stops_order (line_number, stop_id, position_in_order) VALUES (2,5,3);
+INSERT INTO ptm_stops_order (line_id, stop_id, position_in_order) VALUES (1,1,1);
+INSERT INTO ptm_stops_order (line_id, stop_id, position_in_order) VALUES (1,2,2);
+INSERT INTO ptm_stops_order (line_id, stop_id, position_in_order) VALUES (1,3,3);
+INSERT INTO ptm_stops_order (line_id, stop_id, position_in_order) VALUES (2,4,1);
+INSERT INTO ptm_stops_order (line_id, stop_id, position_in_order) VALUES (2,1,2);
+INSERT INTO ptm_stops_order (line_id, stop_id, position_in_order) VALUES (2,5,3);
 
 INSERT INTO ptm_tickets (name, validity_days, zone_id, price, concessionary) VALUES
     ('Full-fare monthly zone A', 30, 1, 120, false);
@@ -241,15 +241,15 @@ INSERT INTO ptm_passengers (pesel, name, surname, phone_number, email, address, 
 INSERT INTO ptm_passengers (pesel, name, surname, phone_number, email, address, ticket_id, date_of_purchase) VALUES
     ('98765432100', 'Albus','Dumbledore','456123789','dumbledore@example.com','1 Hogwarts Street',4,date '2022-01-11');
 
-INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+INSERT INTO ptm_courses (line_id, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
     (1,1,1,1,'09:45','10:38');
-INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+INSERT INTO ptm_courses (line_id, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
     (1,1,2,2,'12:21','13:14');
-INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+INSERT INTO ptm_courses (line_id, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
     (2,3,2,1,'15:11','16:02');
-INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+INSERT INTO ptm_courses (line_id, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
     (2,3,1,2,'17:40','18:31');
-INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
-    (201,2,1,1,'02:10','03:15');
-INSERT INTO ptm_courses (line_number, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
-    (201,2,2,2,'01:15','02:20');
+INSERT INTO ptm_courses (line_id, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+    (3,2,1,1,'02:10','03:15');
+INSERT INTO ptm_courses (line_id, shuttle_type_id, bus_id, driver_id, departure_time, arrival_time) VALUES
+    (3,2,2,2,'01:15','02:20');

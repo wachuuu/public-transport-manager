@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface StopOrderRepository extends JpaRepository<StopOrder, Integer> {
 
-    List<StopOrder> findAllByLineLineNumberOrderByPositionInOrder(Integer line_number);
+    List<StopOrder> findAllByLineLineIdOrderByPositionInOrder(Integer line_id);
+
+    List<StopOrder> findAllByStopStopIdOrderByLineLineId(Integer stop_id);
 }
