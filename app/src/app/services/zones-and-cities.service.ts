@@ -99,7 +99,7 @@ export class ZonesAndCitiesService {
     this.http.delete(`${this.citiesUrl}/${city_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.cities.findIndex((item) => item.city_id == city_id);
-        this.cities.splice(index);
+        this.cities.splice(index, 1);
         this._cities$.next(this.cities);
       }
     })
@@ -158,7 +158,7 @@ export class ZonesAndCitiesService {
     this.http.delete(`${this.zonesUrl}/${zone_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.zones.findIndex((item) => item.zone_id == zone_id);
-        this.zones.splice(index);
+        this.zones.splice(index, 1);
         this._zones$.next(this.zones);
         this.getZonesWithCities();
       }
@@ -217,7 +217,7 @@ export class ZonesAndCitiesService {
     this.http.delete(`${this.affiliationsUrl}/${affiliation_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.affiliations.findIndex((item) => item.affiliation_id == affiliation_id);
-        this.affiliations.splice(index);        
+        this.affiliations.splice(index, 1);        
         this._affiliations$.next(this.affiliations);
         this.getZonesWithCities();
       }

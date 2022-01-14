@@ -36,7 +36,7 @@ export class DriversService {
     this.http.delete(`${this.url}/${driver_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.drivers.findIndex((item) => item.driver_id == driver_id);
-        this.drivers.splice(index);
+        this.drivers.splice(index, 1);
         this._drivers$.next(this.drivers);
       }
     })

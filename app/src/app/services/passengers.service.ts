@@ -57,7 +57,7 @@ export class PassengersService {
     this.http.delete(`${this.url}/${passenger_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.passengers.findIndex((item) => item.passenger_id == passenger_id);
-        this.passengers.splice(index);
+        this.passengers.splice(index, 1);
         this._passengers$.next(this.passengers);
       }
     })

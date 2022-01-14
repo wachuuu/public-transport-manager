@@ -6,6 +6,7 @@ import { BusesComponent } from './components/pages/buses/buses.component';
 import { DriversComponent } from './components/pages/drivers/drivers.component';
 import { PassengersComponent } from './components/pages/passengers/passengers.component';
 import { ShuttleTypesComponent } from './components/pages/shuttle-types/shuttle-types.component';
+import { StopsComponent } from './components/pages/stops/stops.component';
 import { TicketsComponent } from './components/pages/tickets/tickets.component';
 import { ZonesAndCitiesComponent } from './components/pages/zones-and-cities/zones-and-cities.component';
 import { AuthGuard } from './helpers/auth.guard';
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'shuttle-types', component: ShuttleTypesComponent, canActivate: [AuthGuard] },
   { path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard] },
   { path: 'passengers', component: PassengersComponent, canActivate: [AuthGuard] },
+  { path: 'stops', component: StopsComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' },
 ];
 

@@ -27,6 +27,7 @@ import { BusesComponent } from './components/pages/buses/buses.component';
 import { DriversComponent } from './components/pages/drivers/drivers.component';
 import { PassengersComponent } from './components/pages/passengers/passengers.component';
 import { ShuttleTypesComponent } from './components/pages/shuttle-types/shuttle-types.component';
+import { StopsComponent } from './components/pages/stops/stops.component';
 import { TicketsComponent } from './components/pages/tickets/tickets.component';
 import { CitiesComponent } from './components/pages/zones-and-cities/cities/cities.component';
 import { ZonesAndCitiesComponent } from './components/pages/zones-and-cities/zones-and-cities.component';
@@ -51,6 +52,7 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
     ShuttleTypesComponent,
     PassengersComponent,
     TicketsComponent,
+    StopsComponent,
   ],
   imports: [
     BrowserModule,

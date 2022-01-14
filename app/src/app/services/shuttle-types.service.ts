@@ -53,7 +53,7 @@ export class ShuttleTypesService {
     this.http.delete(`${this.url}/${shuttle_type_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.shuttle_types.findIndex((item) => item.shuttle_type_id == shuttle_type_id);
-        this.shuttle_types.splice(index);
+        this.shuttle_types.splice(index, 1);
         this._shuttle_types$.next(this.shuttle_types);
       }
     })

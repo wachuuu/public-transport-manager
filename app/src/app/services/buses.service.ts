@@ -72,7 +72,7 @@ export class BusesService {
     this.http.delete(`${this.brandsUrl}/${brand_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.brands.findIndex((item) => item.brand_id == brand_id);
-        this.brands.splice(index);
+        this.brands.splice(index, 1);
         this._brands$.next(this.brands);
       }
     })
@@ -118,7 +118,7 @@ export class BusesService {
     this.http.delete(`${this.modelsUrl}/${model_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.models.findIndex((item) => item.model_id == model_id);
-        this.models.splice(index);
+        this.models.splice(index, 1);
         this._models$.next(this.models);
       }
     })
@@ -159,7 +159,7 @@ export class BusesService {
     this.http.delete(`${this.busesUrl}/${bus_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.buses.findIndex((item) => item.bus_id == bus_id);
-        this.buses.splice(index);
+        this.buses.splice(index, 1);
         this._buses$.next(this.buses);
       }
     })
