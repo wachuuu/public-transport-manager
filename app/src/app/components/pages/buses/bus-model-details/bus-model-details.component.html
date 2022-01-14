@@ -148,15 +148,15 @@
     <p>This operation cannot be undone</p>
     <p class="warn" *ngIf="busesForModel.length > 0">
       <strong>NOTE</strong>: You will also delete all buses that are assigned to this model!
-      ( <span *ngFor="let bus of busesForModel">{{ bus.number_plate }} </span>)
+      (<span *ngFor="let bus of busesForModel; let isLast=last">{{ bus.number_plate }}{{ isLast ? '' : ', ' }}</span>)
     </p>
     <div class="action-buttons">
       <button mat-raised-button color="warn" (click)="deleteModel(currentModel)"> Delete </button>
       <button mat-raised-button (click)="showPanel('none')"> Cancel </button>
     </div>
   </div>
-
 </div>
+
 <div class="data-table">
   <table mat-table [dataSource]="dataSource" class="full-width-table">
     <ng-container matColumnDef="model_id">
