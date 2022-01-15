@@ -12,7 +12,8 @@ import javax.persistence.*;
 public class Stop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer stop_id;
+    @Column( name = "stop_id" )
+    private Integer stopId;
     private String name;
     private Boolean interactive_boards;
 

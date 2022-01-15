@@ -42,7 +42,7 @@ public class StopResource {
     public ResponseEntity<Stop> addStop(@RequestBody Stop stop){
         try{
             checkZone(stop);
-            stop.setStop_id(null);
+            stop.setStopId(null);
             return new ResponseEntity<>(stopRepository.save(stop), HttpStatus.CREATED);
         } catch (Exception e){
             throw new PtmBadRequestException("Invalid request");
@@ -55,7 +55,7 @@ public class StopResource {
         if (stopRepository.existsById(stopId)){
             try {
                 checkZone(stop);
-                stop.setStop_id(stopId);
+                stop.setStopId(stopId);
                 return new ResponseEntity<>(stopRepository.save(stop), HttpStatus.OK);
             } catch (Exception e) {
                 throw new PtmBadRequestException("Invalid request");
@@ -79,9 +79,8 @@ public class StopResource {
             Optional<Zone> zoneFound = zoneRepository.findById(stop.getZone().getZone_id());
             if (zoneFound.isPresent())
                 stop.setZone(zoneFound.get());
-            else {
+            else
                 throw new PtmBadRequestException("Invalid request");
-            }
         } else {
             try {
                 stop.setZone(zoneRepository.save(stop.getZone()));

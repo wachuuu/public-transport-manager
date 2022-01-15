@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
-    List<Course> findAllByLineLineNumberOrderByDepartureTime(Integer line_number);
+    List<Course> findAllByLineLineIdOrderByDepartureTime(Integer line_id);
 }

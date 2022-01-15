@@ -11,8 +11,10 @@ import javax.persistence.*;
 @ToString
 public class Line {
     @Id
-    @Column( name = "line_number")
-    private Integer lineNumber;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( name = "line_id")
+    private Integer lineId;
+    private Integer line_number;
     private Boolean day_line;
 
     public Line() {}

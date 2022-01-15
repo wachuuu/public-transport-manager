@@ -16,8 +16,8 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(
-            name = "lineNumber",
-            referencedColumnName = "line_number"
+            name = "LineId",
+            referencedColumnName = "line_id"
     )
     private Line line;
 

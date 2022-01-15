@@ -48,9 +48,9 @@ public class CourseResource {
         throw new PtmResourceNotFoundException("Course not found");
     }
 
-    @GetMapping("/line/{line_number}")
-    public ResponseEntity<List<Course>> getStopOrderByLine(@PathVariable("line_number") Integer line_number) {
-        List<Course> courses = courseRepository.findAllByLineLineNumberOrderByDepartureTime(line_number);
+    @GetMapping("/line/{line_id}")
+    public ResponseEntity<List<Course>> getStopOrderByLine(@PathVariable("line_id") Integer line_id) {
+        List<Course> courses = courseRepository.findAllByLineLineIdOrderByDepartureTime(line_id);
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
@@ -101,9 +101,8 @@ public class CourseResource {
             Optional<Driver> driverFound = driverRepository.findById(course.getDriver().getDriver_id());
             if (driverFound.isPresent())
                 course.setDriver(driverFound.get());
-            else {
+            else
                 throw new PtmBadRequestException("Invalid request");
-            }
         } else {
             try {
                 course.setDriver(driverRepository.save(course.getDriver()));
@@ -114,19 +113,19 @@ public class CourseResource {
     }
 
     public void checkLine(Course course) {
-        if (course.getLine().getLineNumber() != null) {
-            Optional<Line> lineFound = lineRepository.findById(course.getLine().getLineNumber());
+        if (course.getLine().getLineId() != null) {
+            Optional<Line> lineFound = lineRepository.findById(course.getLine().getLineId());
             if (lineFound.isPresent())
                 course.setLine(lineFound.get());
-            else {
-                try {
-                    course.setLine(lineRepository.save(course.getLine()));
-                } catch (Exception e) {
-                    throw new PtmBadRequestException("Invalid request");
-                }
+            else
+                throw new PtmBadRequestException("Invalid request");
+        } else {
+            try {
+                course.setLine(lineRepository.save(course.getLine()));
+            } catch (Exception e) {
+                throw new PtmBadRequestException("Invalid request");
             }
-        } else
-            throw new PtmBadRequestException("Invalid request");
+        }
     }
 
     public void checkShuttleType(Course course) {
@@ -135,9 +134,8 @@ public class CourseResource {
                     findById(course.getShuttle_type().getShuttle_type_id());
             if (shuttleTypeFound.isPresent())
                 course.setShuttle_type(shuttleTypeFound.get());
-            else {
+            else
                 throw new PtmBadRequestException("Invalid request");
-            }
         } else {
             try {
                 course.setShuttle_type(shuttleTypeRepository.save(course.getShuttle_type()));
@@ -152,9 +150,8 @@ public class CourseResource {
             Optional<Bus> busFound = busRepository.findById(course.getBus().getBus_id());
             if (busFound.isPresent())
                 course.setBus(busFound.get());
-            else {
+            else
                 throw new PtmBadRequestException("Invalid request");
-            }
         } else {
             try {
                 course.setBus(busRepository.save(busResource.checkBusModel(course.getBus())));

@@ -11,8 +11,7 @@ import pl.publictransportmanager.publictransportmanagerapi.repositories.StopRepo
 import pl.publictransportmanager.publictransportmanagerapi.repositories.StopOrderRepository;
 import pl.publictransportmanager.publictransportmanagerapi.repositories.LineRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/stops_order")
@@ -46,8 +45,44 @@ public class StopOrderResource {
 
     @GetMapping("/line/{line_number}")
     public ResponseEntity<List<StopOrder>> getStopOrderByLine(@PathVariable("line_number") Integer line_number){
-        List<StopOrder> stopOrders = stopOrderRepository.findAllByLineLineNumberOrderByPositionInOrder(line_number);
-        return new ResponseEntity<>(stopOrders, HttpStatus.OK);
+        Optional<Line> lineFound = lineRepository.findById(line_number);
+        if (lineFound.isPresent()) {
+            List<StopOrder> stopOrders = stopOrderRepository.findAllByLineLineIdOrderByPositionInOrder(line_number);
+            return new ResponseEntity<>(stopOrders, HttpStatus.OK);
+        }
+        throw new PtmResourceNotFoundException("Stop order not found");
+    }
+
+    @GetMapping("/line_list/{line_id}")
+    public ResponseEntity<Map<String,Object>> getStopsByLine(@PathVariable("line_id") Integer line_id){
+        Optional<Line> lineFound = lineRepository.findById(line_id);
+        if (lineFound.isPresent()){
+            List<StopOrder> stopOrders = stopOrderRepository.findAllByLineLineIdOrderByPositionInOrder(line_id);
+            Map<String,Object> result = new HashMap<>();
+            result.put("line",lineFound.get());
+            List<Stop> stops = new Vector<>();
+            for (StopOrder i : stopOrders)
+                stops.add(i.getStop());
+            result.put("stops",stops);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        throw new PtmResourceNotFoundException("Line not found");
+    }
+
+    @GetMapping("/stop_list/{stop_id}")
+    public ResponseEntity<Map<String,Object>> getLinesByStop(@PathVariable("stop_id") Integer stop_id){
+        Optional<Stop> stopFound = stopRepository.findById(stop_id);
+        if (stopFound.isPresent()){
+            List<StopOrder> stopOrders = stopOrderRepository.findAllByStopStopIdOrderByLineLineId(stop_id);
+            Map<String,Object> result = new HashMap<>();
+            result.put("stop",stopFound.get());
+            List<Line> lines = new Vector<>();
+            for (StopOrder i : stopOrders)
+                lines.add(i.getLine());
+            result.put("lines",lines);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        throw new PtmResourceNotFoundException("Line not found");
     }
 
     @PostMapping("")
@@ -58,7 +93,7 @@ public class StopOrderResource {
         try{
             StopOrder s = stopOrderRepository.save(stopOrder);
             List<StopOrder> stopOrders = stopOrderRepository.
-                    findAllByLineLineNumberOrderByPositionInOrder(s.getLine().getLineNumber());
+                    findAllByLineLineIdOrderByPositionInOrder(s.getLine().getLineId());
             for (StopOrder i : stopOrders){
                 if (i.getPositionInOrder() >= s.getPositionInOrder() && i!=s){
                     i.setPositionInOrder(i.getPositionInOrder()+1);
@@ -83,7 +118,7 @@ public class StopOrderResource {
             try {
                 StopOrder s = stopOrderRepository.save(stopOrder);
                 List<StopOrder> stopOrders = stopOrderRepository.
-                        findAllByLineLineNumberOrderByPositionInOrder(s.getLine().getLineNumber());
+                        findAllByLineLineIdOrderByPositionInOrder(s.getLine().getLineId());
                 if (oldPos > s.getPositionInOrder()){
                     for (StopOrder i : stopOrders){
                         if (i.getPositionInOrder() >= s.getPositionInOrder() &&
@@ -120,13 +155,12 @@ public class StopOrderResource {
     }
 
     public void checkStop(StopOrder stopOrder) {
-        if (stopOrder.getStop().getStop_id() != null) {
-            Optional<Stop> stopFound = stopRepository.findById(stopOrder.getStop().getStop_id());
+        if (stopOrder.getStop().getStopId() != null) {
+            Optional<Stop> stopFound = stopRepository.findById(stopOrder.getStop().getStopId());
             if (stopFound.isPresent())
                 stopOrder.setStop(stopFound.get());
-            else {
+            else
                 throw new PtmBadRequestException("Invalid request");
-            }
         } else {
             try {
                 stopOrder.setStop(stopRepository.save(stopResource.checkZone(stopOrder.getStop())));
@@ -137,18 +171,18 @@ public class StopOrderResource {
     }
 
     public void checkLine(StopOrder stopOrder) {
-        if (stopOrder.getLine().getLineNumber() != null) {
-            Optional<Line> lineFound = lineRepository.findById(stopOrder.getLine().getLineNumber());
+        if (stopOrder.getLine().getLineId() != null) {
+            Optional<Line> lineFound = lineRepository.findById(stopOrder.getLine().getLineId());
             if (lineFound.isPresent())
                 stopOrder.setLine(lineFound.get());
-            else {
-                try {
-                    stopOrder.setLine(lineRepository.save(stopOrder.getLine()));
-                } catch (Exception e) {
-                    throw new PtmBadRequestException("Invalid request");
-                }
+            else
+                throw new PtmBadRequestException("Invalid request");
+        } else {
+            try {
+                stopOrder.setLine(lineRepository.save(stopOrder.getLine()));
+            } catch (Exception e) {
+                throw new PtmBadRequestException("Invalid request");
             }
-        } else
-            throw new PtmBadRequestException("Invalid request");
+        }
     }
 }
