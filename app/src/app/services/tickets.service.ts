@@ -57,7 +57,7 @@ export class TicketsService {
     this.http.delete(`${this.url}/${ticket_id}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.tickets.findIndex((item) => item.ticket_id == ticket_id);
-        this.tickets.splice(index);
+        this.tickets.splice(index, 1);
         this._tickets$.next(this.tickets);
       }
     })
