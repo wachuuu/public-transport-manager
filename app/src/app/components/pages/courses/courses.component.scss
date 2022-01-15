@@ -1,0 +1,26 @@
+:host {
+  h2 {
+    margin-top: .5rem;
+  }
+
+  .timepicker {
+    display: inline-block;
+    margin: 0 1rem;
+
+    mat-form-field {
+      margin: 0;
+      width: 30px;
+    }
+
+    mat-label {
+      display: block;
+      color: rgba(0,0,0,.54);
+      margin-bottom: -12px;
+      font-size: 12px;
+    }
+  }
+}
+
+mat-checkbox {
+  margin: .5rem 1rem;
+}
