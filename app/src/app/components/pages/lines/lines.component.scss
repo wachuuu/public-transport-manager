@@ -1,0 +1,73 @@
+:host {
+  h2 {
+    margin-top: .5rem;
+  }
+
+  .stop-order {
+    margin: 1rem;
+    border: rgba(0, 0, 0, 0.1) 1px solid;
+    border-radius: 10px;
+    width: 50%;
+    max-height: 300px;
+    overflow: auto;
+
+    .new-stop {
+      margin: 0 3rem;
+    }
+    
+    .row {
+      position: relative;
+      padding: .5rem 1rem;
+      border-top: rgba(0, 0, 0, 0.1) 1px solid;
+
+      &:first-child {
+        border: none;
+      }
+
+      .index {
+        margin-right: 1rem;
+        color: rgba(0, 0, 0, 0.3);
+      }
+
+      .order-buttons {
+        position: absolute;
+        right: 1rem;
+        top: .5rem;
+
+        button {
+          border: none;
+          background: none;
+          cursor: pointer;
+
+          &:hover {
+            mat-icon {
+              border-radius: 50%;
+              background-color: rgba(0, 0, 0, 0.1);
+            }
+          }
+        }
+
+        .delete-btn {
+          color: red;
+
+          mat-icon {
+            font-size: 16px;
+            position: absolute;
+            top: 3px;
+            right: -8px;
+          }
+        }
+      }
+    }
+  }
+}
+
+mat-checkbox {
+  margin: .5rem 1rem;
+  display: inline-block;
+}
+
+.warn {
+  font-size: 14px;
+  color: red;
+}
