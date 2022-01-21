@@ -32,4 +32,11 @@ public class StopOrder {
     private Integer positionInOrder;
 
     public StopOrder() {}
+
+    public StopOrder(Line line, Stop stop, Integer pos) {
+        this.id = null;
+        this.line = line;
+        this.stop = stop;
+        this.positionInOrder = pos;
+    }
 }
