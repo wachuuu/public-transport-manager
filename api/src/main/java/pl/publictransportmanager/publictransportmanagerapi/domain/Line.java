@@ -18,4 +18,8 @@ public class Line {
     private Boolean day_line;
 
     public Line() {}
+
+    public Line(Integer id) {
+        this.lineId = id;
+    }
 }
