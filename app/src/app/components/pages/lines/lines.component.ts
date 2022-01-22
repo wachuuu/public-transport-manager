@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { LineWithStops } from 'src/app/models/line.model';
-import { Stop, StopOrder } from 'src/app/models/stop.model';
+import { Stop } from 'src/app/models/stop.model';
 import { StopsAndLinesService } from 'src/app/services/stops-and-lines.service';
 
 @Component({
@@ -17,7 +17,6 @@ export class LinesComponent implements OnInit {
   dataSource: MatTableDataSource<LineWithStops>;
   currentAction: Actions = Actions.None;
   stops: Stop[];
-  stopsOrder: StopOrder[];
   showStopPicker: boolean = false;
   currentLine: LineWithStops;
   newLine: LineWithStops;
@@ -35,15 +34,11 @@ export class LinesComponent implements OnInit {
     this.stopsAndLinesService.stops$.subscribe((data) => {
       this.stops = data;
     })
-    this.stopsAndLinesService.stopsOrder$.subscribe((data) => {
-      this.stopsOrder = data;
-    })
   }
 
   ngOnInit(): void {
     this.stopsAndLinesService.getLinesWithStops();
     this.stopsAndLinesService.getStops();
-    this.stopsAndLinesService.getStopOrders();
   }
 
   showPanel(type: string, line?: LineWithStops) {
@@ -116,40 +111,7 @@ export class LinesComponent implements OnInit {
   }
 
   editLine(line: LineWithStops) {
-    this.stopsAndLinesService.updateLine(line.line);
-    this.stopsAndLinesService.getStopOrders();
-    let originalStops = this.currentLine.stops
-    let newStops = line.stops
-
-    if (originalStops.length === newStops.length) {
-      for (let i = 0; i < originalStops.length; i++) {
-        if (originalStops[i].stopId != newStops[i].stopId) {
-          this.stopsAndLinesService.updateStopOrder(line.line, originalStops[i], newStops[i], i+1);
-        }
-      }
-    } else if (originalStops.length > newStops.length) { // deleted some stops
-      for (let i = 0; i < originalStops.length; i++) {
-        if (i < newStops.length) {
-          if (originalStops[i].stopId != newStops[i].stopId) {
-            this.stopsAndLinesService.updateStopOrder(line.line, originalStops[i], newStops[i], i+1);
-          }
-        } else {
-          this.stopsAndLinesService.deleteStopOrder(line.line, originalStops[i], i+1);
-        }
-      }
-    } else if (originalStops.length < newStops.length) { // added som stops
-      for (let i = 0; i < newStops.length; i++) {
-        if (i < originalStops.length) {
-          if (originalStops[i].stopId != newStops[i].stopId) {
-            this.stopsAndLinesService.updateStopOrder(line.line, originalStops[i], newStops[i], i+1);
-          }
-        } else {
-          console.log('add ', i+1, line.line, newStops[i])
-          this.stopsAndLinesService.addStopOrder(line.line, newStops[i], i+1);
-        }
-      }
-    }
-    this.stopsAndLinesService.getLinesWithStops();
+    this.stopsAndLinesService.updateLine(line);
     this.showPanel('view', line);
   }
 
@@ -160,9 +122,6 @@ export class LinesComponent implements OnInit {
 
   deleteLine(line: LineWithStops) {
     this.stopsAndLinesService.deleteLine(line.line.lineId);
-    // TODO: make possible to delete more stops at once.
-    // By now please delete only one stop at a time
-    this.stopsAndLinesService.getLinesWithStops();
     this.showPanel('none');
   }
 
@@ -183,14 +142,14 @@ export class LinesComponent implements OnInit {
     line.stops.splice(index, 1);
   }
 
-  showPicker() {
-    this.stopsAndLinesService.getStops()
-    this.showStopPicker = true;
-  }
-
   addStopToLine(line: LineWithStops, stop: Stop) {
     this.showStopPicker = false;
     line.stops = [...line.stops, stop];
+  }
+
+  showPicker() {
+    this.stopsAndLinesService.getStops()
+    this.showStopPicker = true;
   }
 
   isFormValid() {

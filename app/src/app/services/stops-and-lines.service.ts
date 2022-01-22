@@ -97,57 +97,64 @@ export class StopsAndLinesService {
     this.http.post<Line>(this.linesUrl, line.line, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         this.lines = [...this.lines, response.body];
-        if (line.stops.length == 0) this.getLinesWithStops();
-        line.stops.forEach((stop, index) => {
-          console.log('add ', index+1, line.line, stop)
-          this.addStopOrder(response.body, stop, index+1)
-        })
+        let newLine = response.body;
+        if (line.stops.length != 0) {
+          this.http.post<LineWithStops>(`${this.stopOrdersUrl}/${newLine.lineId}`, line.stops, { observe: 'response' }).subscribe((response) => {
+            if (response.ok) {
+              this.linesWithStops = [...this.linesWithStops, response.body];
+            }
+          })
+        } else {
+          let newLineWithStops: LineWithStops = {
+            line: newLine,
+            stops: [],
+          };
+          this.linesWithStops = [...this.linesWithStops, newLineWithStops];
+        }
       }
     })
-    this.getLinesWithStops();
   }
 
-  public updateLine(line: Line) {
-    this.http.put<Line>(`${this.linesUrl}/${line.lineId}`, line, { observe: 'response' }).subscribe((response) => {
+  public updateLine(line: LineWithStops) {
+    this.http.put<Line>(`${this.linesUrl}/${line.line.lineId}`, line.line, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
         let index = this.lines.findIndex((item) => item.lineId == response.body.lineId);
         if (index > -1) {
           this.lines[index] = response.body;
           this._lines$.next(this.lines);
         }
+        this.http.post<LineWithStops>(`${this.stopOrdersUrl}/${line.line.lineId}`, line.stops, { observe: 'response' }).subscribe((response) => {
+          if (response.ok) {
+            let index = this.linesWithStops.findIndex((item) => item.line.lineId == response.body.line.lineId);
+            if (index > -1) {
+              this.linesWithStops[index] = response.body;
+              this._linesWithStops$.next(this.linesWithStops);
+              console.log(this.linesWithStops);
+            }
+          }
+        })
       }
-    })
+    })    
   }
 
   public deleteLine(lineId: number) {
     this.http.delete(`${this.linesUrl}/${lineId}`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
-        let index = this.lines.findIndex((item) => item.lineId == lineId);
-        this.lines.splice(index, 1);
+        let index1 = this.lines.findIndex((item) => item.lineId == lineId);
+        this.lines.splice(index1, 1);
         this._lines$.next(this.lines);
+
+        let index2 = this.linesWithStops.findIndex((item) => item.line.lineId == lineId);
+        this.linesWithStops.splice(index2, 1);
+        this._linesWithStops$.next(this.linesWithStops);
       }
     })
   }
 
   public getLinesWithStops() {
-    let linesToProcess: Line[];
-    this.linesWithStops = [];
-    this.http.get<Line[]>(this.linesUrl, { observe: 'response' }).subscribe((response) => {
+    this.http.get<LineWithStops[]>(`${this.stopOrdersUrl}/line_list`, { observe: 'response' }).subscribe((response) => {
       if (response.ok) {
-        linesToProcess = response.body;
-        linesToProcess.forEach((line) => {
-          this.getLineWithStops(line.lineId);
-        })
-      }
-    })
-  }
-
-  private getLineWithStops(lineId: number) {
-    this.http.get<LineWithStops>(`${this.stopOrdersUrl}/line_list/${lineId}`, { observe: 'response' }).subscribe((response) => {
-      if (response.ok) {
-        this.linesWithStops = [response.body, ...this.linesWithStops];
-        this.linesWithStops.sort((a, b) => a.line.line_number - b.line.line_number)
-        this._linesWithStops$.next(this.linesWithStops);
+          this.linesWithStops = response.body;
       }
     })
   }
