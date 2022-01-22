@@ -31,7 +31,7 @@ export class CoursesComponent implements OnInit {
   newCourse: Course;
 
   blankCourse: Course = {
-    line: { lineNumber: 1 },
+    line: { lineId: null },
     shuttle_type: { shuttle_type_id: null },
     bus: { bus_id: null },
     driver: { driver_id: null },
@@ -188,7 +188,7 @@ export class CoursesComponent implements OnInit {
   }
 
   isFormValid() {
-    if (this.newCourse.line.lineNumber == null ||
+    if (this.newCourse.line.lineId == null ||
         this.newCourse.shuttle_type.shuttle_type_id == null ||
         this.newCourse.bus.bus_id == null ||
         this.newCourse.driver.driver_id == null ||

@@ -26,7 +26,7 @@
           <mat-label>Line</mat-label>
           <mat-select name="line" #line="ngModel" [(ngModel)]="newCourse.line" required>
             <mat-option *ngFor="let line of lines" [value]="line">
-              {{ line.lineNumber }}
+              {{ line.line_number }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -97,7 +97,7 @@
     <div class="container">
       <div>
         <strong>Course ID: </strong> {{ currentCourse.course_id }} <br>
-        <strong>Line: </strong> {{ currentCourse.line.lineNumber }} <br>
+        <strong>Line: </strong> {{ currentCourse.line.line_number }} <br>
         <strong>Shuttle type: </strong> {{ currentCourse.shuttle_type.type }} <br>
         <strong>Bus: </strong> {{ currentCourse.bus.number_plate }} <br>
       </div>
@@ -122,7 +122,7 @@
           <mat-label>Line</mat-label>
           <mat-select name="line" #line="ngModel" [(ngModel)]="newCourse.line" required>
             <mat-option *ngFor="let line of lines" [value]="line">
-              {{ line.lineNumber }}
+              {{ line.line_number }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -190,7 +190,7 @@
   <!-- DELETE -->
   <div *ngIf="isActivePanel('delete')" class="delete action-panel">
     <h3>Delete ticket</h3>
-    <p>Are you sure you want to delete course on line <strong>{{ currentCourse.line.lineNumber }}</strong>?  <strong>({{currentCourse.departureTime}} - {{currentCourse.arrival_time}})</strong></p>
+    <p>Are you sure you want to delete course on line <strong>{{ currentCourse.line.line_number }}</strong>?  <strong>({{currentCourse.departureTime}} - {{currentCourse.arrival_time}})</strong></p>
     <p>This operation cannot be undone</p>
     <div class="action-buttons">
       <button mat-raised-button color="warn" (click)="deleteCourse(currentCourse)"> Delete </button>
@@ -208,7 +208,7 @@
     </ng-container>
     <ng-container matColumnDef="line">
       <th mat-header-cell *matHeaderCellDef> Line </th>
-      <td mat-cell *matCellDef="let row"> {{ row.line.lineNumber }} </td>
+      <td mat-cell *matCellDef="let row"> {{ row.line.line_number }} </td>
     </ng-container>
     <ng-container matColumnDef="shuttle_type">
       <th mat-header-cell *matHeaderCellDef> Shuttle type </th>

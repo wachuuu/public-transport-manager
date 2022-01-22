@@ -57,7 +57,7 @@
     <h3>More info</h3>
     <div class="container">
       <div>
-        <strong>Stop ID: </strong> {{ currentStop.stop_id }} <br>
+        <strong>Stop ID: </strong> {{ currentStop.stopId }} <br>
         <strong>Name: </strong> {{ currentStop.name }} <br>
       </div>
       <div>
@@ -119,9 +119,9 @@
 
 <div class="data-table">
   <table mat-table [dataSource]="dataSource" class="full-width-table">
-    <ng-container matColumnDef="stop_id">
+    <ng-container matColumnDef="stopId">
       <th mat-header-cell *matHeaderCellDef> Stop ID </th>
-      <td mat-cell *matCellDef="let row"> {{ row.stop_id }} </td>
+      <td mat-cell *matCellDef="let row"> {{ row.stopId }} </td>
     </ng-container>
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Name </th>

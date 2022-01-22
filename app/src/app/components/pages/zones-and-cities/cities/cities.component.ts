@@ -12,7 +12,7 @@ import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service
 })
 export class CitiesComponent implements OnInit {
 
-  displayedColumns: string[] = ['city_id', 'name', 'nr_of_residents', 'postcode', 'more', 'edit', 'delete'];
+  displayedColumns: string[] = ['city_id', 'name', 'nr_of_residents', 'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<City>;
   zonesForCity: Zone[];
   currentAction: Actions = Actions.None;
@@ -116,7 +116,8 @@ export class CitiesComponent implements OnInit {
   }
 
   isFormValid() {
-    if (this.newCity.name == '') {
+    if (this.newCity.name == '' ||
+    this.newCity.nr_of_residents < 0) {
       return false;
     } else return true;
   }

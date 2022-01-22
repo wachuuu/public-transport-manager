@@ -13,7 +13,7 @@ import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service
 })
 export class StopsComponent implements OnInit {
 
-  displayedColumns: string[] = ['stop_id', 'name', 'zone', 'interactive_boards',
+  displayedColumns: string[] = ['stopId', 'name', 'zone', 'interactive_boards',
     'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<Stop>;
   currentAction: Actions = Actions.None;
@@ -122,7 +122,7 @@ export class StopsComponent implements OnInit {
   }
 
   deleteStop(stop: Stop) {
-    this.stopsAndLinesService.deleteStop(stop.stop_id);
+    this.stopsAndLinesService.deleteStop(stop.stopId);
     this.showPanel('none');
   }
 
