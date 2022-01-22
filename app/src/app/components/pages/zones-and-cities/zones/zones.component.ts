@@ -6,6 +6,7 @@ import { City } from 'src/app/models/city.model';
 import { Ticket } from 'src/app/models/ticket.model';
 import { ZoneAffiliation } from 'src/app/models/zone-affiliation.model';
 import { ZoneWithCities } from 'src/app/models/zone-with-cities.model';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 import { TicketsService } from 'src/app/services/tickets.service';
 import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service';
 
@@ -21,6 +22,7 @@ export class ZonesComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['zone_id', 'symbol', 'cities', 'more', 'edit', 'delete'];
 
   dataSource: MatTableDataSource<ZoneWithCities>;
+  searchFilter = '';
   currentAction: Actions = Actions.None;
   affiliations: ZoneAffiliation[];
   ticketsForZone: Ticket[];
@@ -36,7 +38,9 @@ export class ZonesComponent implements OnInit, AfterViewInit {
     cities: []
   }
 
-  constructor(private zonesAndCitiesService: ZonesAndCitiesService, private ticketsService: TicketsService) {
+  constructor(private zonesAndCitiesService: ZonesAndCitiesService,
+    private ticketsService: TicketsService,
+    private s: NormalizeStringService) {
     this.dataSource = new MatTableDataSource();
     this.zonesAndCitiesService.zonesWithCities$.subscribe((data) => {
       this.dataSource.data = data;
@@ -49,6 +53,23 @@ export class ZonesComponent implements OnInit, AfterViewInit {
     this.zonesAndCitiesService.cities$.subscribe((data) => {
       this.allCities = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.zone.zone_id ?? '') + " "
+        + (data.zone.symbol ?? '');
+      data.cities.forEach(city => {
+        dataStr += ((city.name ?? '') + " ")
+      })
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
 
   ngOnInit(): void {
@@ -61,6 +82,15 @@ export class ZonesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+  
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
 
   showPanel(type: string, zone?: ZoneWithCities) {

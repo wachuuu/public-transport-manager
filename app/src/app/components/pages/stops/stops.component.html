@@ -118,6 +118,18 @@
 </div>
 
 <div class="data-table">
+
+  <div class="wrapper">
+    <mat-form-field class="search" appearance="standard">
+      <mat-label>Search</mat-label>
+      <input matInput (keyup)="applySearch(searchFilter)" placeholder="Search here"
+        [(ngModel)]="searchFilter" #input>
+      <button *ngIf="searchFilter" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
   <table mat-table matSort [dataSource]="dataSource" class="full-width-table">
     <ng-container matColumnDef="stopId">
       <th mat-sort-header mat-header-cell *matHeaderCellDef> Stop ID </th>

@@ -50,8 +50,7 @@ export class DriversComponent implements OnInit, AfterViewInit {
         + (data.phone_number ?? '') + " "
         + (data.email ?? '') + " "
         + (data.address ?? '') + " "
-        + (data.salary ?? '') + " "
-        console.log(dataStr);
+        + (data.salary ?? '');
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {

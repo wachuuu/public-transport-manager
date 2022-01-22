@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Stop } from 'src/app/models/stop.model';
 import { Zone } from 'src/app/models/zone.model';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 import { StopsAndLinesService } from 'src/app/services/stops-and-lines.service';
 import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service';
 
@@ -19,6 +20,7 @@ export class StopsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['stopId', 'name', 'zone', 'interactive_boards',
     'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<Stop>;
+  searchFilter = '';
   currentAction: Actions = Actions.None;
   zones: Zone[];
   currentStop: Stop;
@@ -31,7 +33,8 @@ export class StopsComponent implements OnInit, AfterViewInit {
   };
 
   constructor(private stopsAndLinesService: StopsAndLinesService,
-    private zonesAndCitiesService: ZonesAndCitiesService) {
+    private zonesAndCitiesService: ZonesAndCitiesService, 
+    private s: NormalizeStringService) {
     this.dataSource = new MatTableDataSource();
     this.stopsAndLinesService.stops$.subscribe((data) => {
       this.dataSource.data = data;
@@ -40,6 +43,21 @@ export class StopsComponent implements OnInit, AfterViewInit {
     this.zonesAndCitiesService.zones$.subscribe((data) => {
       this.zones = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.stopId ?? '') + " "
+        + (data.name ?? '') + " "
+        + (data.zone.symbol ?? '');
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
 
   ngOnInit(): void {
@@ -49,6 +67,15 @@ export class StopsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+  
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
 
   showPanel(type: string, stop?: Stop) {

@@ -5,6 +5,7 @@ import { Actions } from 'src/app/models/actions.enum';
 import { Passenger } from 'src/app/models/passenger.model';
 import { Ticket } from 'src/app/models/ticket.model';
 import { Zone } from 'src/app/models/zone.model';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 import { PassengersService } from 'src/app/services/passengers.service';
 import { TicketsService } from 'src/app/services/tickets.service';
 import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service';
@@ -21,6 +22,7 @@ export class TicketsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['ticket_id', 'name', 'validity_days', 'zone', 'price',
                                 'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<Ticket>;
+  searchFilter = '';
   currentAction: Actions = Actions.None;
   zones: Zone[];
   passengersForTicket: Passenger[];
@@ -36,7 +38,8 @@ export class TicketsComponent implements OnInit, AfterViewInit {
   };
 
   constructor(private ticketsService: TicketsService, 
-      private zonesAndCitiesService: ZonesAndCitiesService, 
+      private zonesAndCitiesService: ZonesAndCitiesService,
+      private s: NormalizeStringService,
       private passengersService: PassengersService) {
     this.dataSource = new MatTableDataSource();
     this.ticketsService.tickets$.subscribe((data) => {
@@ -46,6 +49,23 @@ export class TicketsComponent implements OnInit, AfterViewInit {
     this.zonesAndCitiesService.zones$.subscribe((data) => {
       this.zones = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.ticket_id ?? '') + " "
+        + (data.name ?? '') + " "
+        + (data.validity_days ?? '') + " "
+        + (data.zone.symbol ?? '') + " "
+        + (data.price ?? '');
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
 
   ngOnInit(): void {
@@ -55,6 +75,15 @@ export class TicketsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+  
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
 
   showPanel(type: string, ticket?: Ticket) {

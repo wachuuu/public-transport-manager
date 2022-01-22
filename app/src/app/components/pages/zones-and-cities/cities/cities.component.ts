@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { City } from 'src/app/models/city.model';
 import { Zone } from 'src/app/models/zone.model';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service';
 
 @Component({
@@ -17,6 +18,7 @@ export class CitiesComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['city_id', 'name', 'nr_of_residents', 'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<City>;
+  searchFilter = '';
   zonesForCity: Zone[];
   currentAction: Actions = Actions.None;
   currentCity: City;
@@ -26,11 +28,26 @@ export class CitiesComponent implements OnInit, AfterViewInit {
     name: ''
   };
 
-  constructor(private zonesAndCitiesService: ZonesAndCitiesService) {
+  constructor(private zonesAndCitiesService: ZonesAndCitiesService, private s: NormalizeStringService) {
     this.dataSource = new MatTableDataSource();
     this.zonesAndCitiesService.cities$.subscribe((data) => {
       this.dataSource.data = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.city_id ?? '') + " "
+        + (data.name ?? '') + " "
+        + (data.nr_of_residents ?? '');
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
 
   ngOnInit(): void {
@@ -39,6 +56,15 @@ export class CitiesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+  
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
 
   showPanel(type: string, city?: City) {
