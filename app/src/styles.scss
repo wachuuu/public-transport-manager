@@ -93,6 +93,26 @@ a, a:active, a:visited {
   border-radius: 10px;
   font-size: 14px;
 
+  // TODO: make table height more responsive
+  max-height: 50%;
+
+  .wrapper {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    z-index: 1;
+
+    .search {
+      padding: 0;
+      margin-top: -7px;
+      margin: auto 24px;
+    }
+  }
+
   .full-width-table {
     width: 100%;
   }

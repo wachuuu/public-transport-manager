@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Driver } from 'src/app/models/driver.model';
 import { DriversService } from 'src/app/services/drivers.service';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 
 @Component({
   selector: 'app-drivers',
@@ -28,16 +29,47 @@ export class DriversComponent implements OnInit {
   };
 
   dataSource: MatTableDataSource<Driver>;
+  searchFilter = '';
 
-  constructor(private driversService: DriversService) {
+  constructor(private driversService: DriversService, private s: NormalizeStringService) {
     this.dataSource = new MatTableDataSource();
     this.driversService.drivers$.subscribe((data) => {
       this.dataSource.data = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.driver_id ?? '') + " "
+        + (data.name ?? '') + " "
+        + (data.surname ?? '') + " "
+        + (data.pesel ?? '') + " "
+        + (data.phone_number ?? '') + " "
+        + (data.email ?? '') + " "
+        + (data.address ?? '') + " "
+        + (data.salary ?? '') + " "
+        console.log(dataStr);
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
   
   ngOnInit(): void {
     this.driversService.getDrivers();
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
   
   showPanel(type: string, driver?: Driver) {
