@@ -180,6 +180,23 @@ INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, sal
     ('12345678901','John','Smith','665321312','john.smith@example.com','22 Acacia Avenue',3400);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
     ('10987654321','James','Bond','693456987','007@mi6.com','10 Downing Street',4007);
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('10987654321','Abraham','Lincoln','226123001','ah@usa.com','21 White House',4007);
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('10987654321','Mariah','Carey','241220001','alliwant@is.you','24/12 Santa Street',4007);
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('10987654321','Ryshard','Peya','859324682','rychu@solufka.com','21/2 Piątkowska Street Poznań',4007);
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('10987654321','Ambrogy','Klex','456123789','klex@academz.com','2122 Academical Palace',4007);
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('10987654321','Leonardo','Dicaprio','885321753','leo@d.leo.com','13/3 Beverly Hills, LA',4007);
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('10987654321','Anthony','Hopkins','321684369','lamb@silent.com','885-2 Silent',4007);
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('10987654321','Frodo','Baggins','559663117','frodo@baggins.com','Shire',4007);
+INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
+    ('10987654321','Jan','Sobieski','186543211','j3@sob.com','885/2F Maple park',4007);
+
 
 INSERT INTO ptm_brands (name) VALUES ('Solaris');
 INSERT INTO ptm_brands (name) VALUES ('Star');
