@@ -181,21 +181,21 @@ INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, sal
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
     ('10987654321','James','Bond','693456987','007@mi6.com','10 Downing Street',4007);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
-    ('10987654321','Abraham','Lincoln','226123001','ah@usa.com','21 White House',4007);
+    ('33615135123','Abraham','Lincoln','226123001','ah@usa.com','21 White House',4000);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
-    ('10987654321','Mariah','Carey','241220001','alliwant@is.you','24/12 Santa Street',4007);
+    ('45621875135','Mariah','Carey','241220001','alliwant@is.you','24/12 Santa Street',4500);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
-    ('10987654321','Ryshard','Peya','859324682','rychu@solufka.com','21/2 Piątkowska Street Poznań',4007);
+    ('10226659789','Ryshard','Peya','859324682','rychu@solufka.com','21/2 Piątkowska Street Poznań',2300);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
-    ('10987654321','Ambrogy','Klex','456123789','klex@academz.com','2122 Academical Palace',4007);
+    ('88213548951','Ambrogy','Klex','456123789','klex@academz.com','2122 Academical Palace',3400);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
-    ('10987654321','Leonardo','Dicaprio','885321753','leo@d.leo.com','13/3 Beverly Hills, LA',4007);
+    ('00321654987','Leonardo','Dicaprio','885321753','leo@d.leo.com','13/3 Beverly Hills, LA',3900);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
-    ('10987654321','Anthony','Hopkins','321684369','lamb@silent.com','885-2 Silent',4007);
+    ('14523698741','Anthony','Hopkins','321684369','lamb@silent.com','885-2 Silent',2020);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
-    ('10987654321','Frodo','Baggins','559663117','frodo@baggins.com','Shire',4007);
+    ('01023456879','Frodo','Baggins','559663117','frodo@baggins.com','Shire',5000);
 INSERT INTO ptm_drivers (pesel, name, surname, phone_number, email, address, salary) VALUES
-    ('10987654321','Jan','Sobieski','186543211','j3@sob.com','885/2F Maple park',4007);
+    ('77895412988','Jan','Sobieski','186543211','j3@sob.com','885/2F Maple park',2885);
 
 
 INSERT INTO ptm_brands (name) VALUES ('Solaris');
