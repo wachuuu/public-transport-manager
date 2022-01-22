@@ -24,6 +24,5 @@ public class Stop {
     )
     private Zone zone;
 
-
     public Stop() {}
 }

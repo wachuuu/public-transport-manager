@@ -12,4 +12,6 @@ public interface StopOrderRepository extends JpaRepository<StopOrder, Integer> {
     List<StopOrder> findAllByLineLineIdOrderByPositionInOrder(Integer line_id);
 
     List<StopOrder> findAllByStopStopIdOrderByLineLineId(Integer stop_id);
+
+    void deleteByLineLineId(Integer line_id);
 }
