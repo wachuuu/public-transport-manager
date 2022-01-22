@@ -91,17 +91,17 @@
 </div>
 
 <div class="data-table">
-  <table mat-table [dataSource]="dataSource" class="full-width-table">
+  <table mat-table matSort [dataSource]="dataSource" class="full-width-table">
     <ng-container matColumnDef="city_id">
-      <th mat-header-cell *matHeaderCellDef> City ID </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> City ID </th>
       <td mat-cell *matCellDef="let row"> {{ row.city_id }} </td>
     </ng-container>
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let row"> {{ row.name }} </td>
     </ng-container>
     <ng-container matColumnDef="nr_of_residents">
-      <th mat-header-cell *matHeaderCellDef> Number of residents </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Number of residents </th>
       <td mat-cell *matCellDef="let row"> {{ row.nr_of_residents }} </td>
     </ng-container>
     <ng-container matColumnDef="more">

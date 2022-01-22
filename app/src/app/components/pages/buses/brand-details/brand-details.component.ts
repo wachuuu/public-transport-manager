@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Brand } from 'src/app/models/brand.model';
@@ -10,7 +11,9 @@ import { BusesService } from 'src/app/services/buses.service';
   templateUrl: './brand-details.component.html',
   styleUrls: ['./brand-details.component.scss']
 })
-export class BrandDetailsComponent implements OnInit {
+export class BrandDetailsComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['brand_id', 'name', 'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<Brand>;
@@ -32,6 +35,10 @@ export class BrandDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.busService.getBrands();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
   }
 
   showPanel(type: string, brand?: Brand) {

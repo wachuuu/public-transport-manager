@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Stop } from 'src/app/models/stop.model';
@@ -11,7 +12,9 @@ import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service
   templateUrl: './stops.component.html',
   styleUrls: ['./stops.component.scss']
 })
-export class StopsComponent implements OnInit {
+export class StopsComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['stopId', 'name', 'zone', 'interactive_boards',
     'more', 'edit', 'delete'];
@@ -42,6 +45,10 @@ export class StopsComponent implements OnInit {
   ngOnInit(): void {
     this.stopsAndLinesService.getStops();
     this.zonesAndCitiesService.getZones();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
   }
 
   showPanel(type: string, stop?: Stop) {

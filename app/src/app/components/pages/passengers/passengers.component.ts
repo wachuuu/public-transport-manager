@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Passenger } from 'src/app/models/passenger.model';
@@ -11,7 +12,9 @@ import { TicketsService } from 'src/app/services/tickets.service';
   templateUrl: './passengers.component.html',
   styleUrls: ['./passengers.component.scss']
 })
-export class PassengersComponent implements OnInit {
+export class PassengersComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['passenger_id', 'name', 'surname', 'ticket', 'date_of_purchase',
     'more', 'edit', 'delete'];
@@ -45,6 +48,10 @@ export class PassengersComponent implements OnInit {
   ngOnInit(): void {
     this.passengersService.getPassengers();
     this.ticketsService.getTickets();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
   }
 
   showPanel(type: string, ticket?: Passenger) {

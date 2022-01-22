@@ -118,21 +118,21 @@
 </div>
 
 <div class="data-table">
-  <table mat-table [dataSource]="dataSource" class="full-width-table">
+  <table mat-table matSort [dataSource]="dataSource" class="full-width-table">
     <ng-container matColumnDef="stopId">
-      <th mat-header-cell *matHeaderCellDef> Stop ID </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Stop ID </th>
       <td mat-cell *matCellDef="let row"> {{ row.stopId }} </td>
     </ng-container>
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let row"> {{ row.name }} </td>
     </ng-container>
     <ng-container matColumnDef="zone">
-      <th mat-header-cell *matHeaderCellDef> Zone </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Zone </th>
       <td mat-cell *matCellDef="let row"> {{ row.zone.symbol }} </td>
     </ng-container>
     <ng-container matColumnDef="interactive_boards">
-      <th mat-header-cell *matHeaderCellDef> Interactive boards? </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Interactive boards? </th>
       <td mat-cell *matCellDef="let row"> {{ row.interactive_boards ? 'Yes' : 'No' }} </td>
     </ng-container>
     <ng-container matColumnDef="more">

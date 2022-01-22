@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Bus } from 'src/app/models/bus.model';
@@ -17,7 +18,9 @@ import { StopsAndLinesService } from 'src/app/services/stops-and-lines.service';
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.scss']
 })
-export class CoursesComponent implements OnInit {
+export class CoursesComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['course_id', 'line', 'shuttle_type', 'departureTime', 'arrival_time',
     'more', 'edit', 'delete'];
@@ -73,6 +76,11 @@ export class CoursesComponent implements OnInit {
     this.busesService.getBuses();
     this.driversService.getDrivers();
   }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+  }
+
   showPanel(type: string, course?: Course) {
     if (course) this.currentCourse = course;
     switch(type) { 

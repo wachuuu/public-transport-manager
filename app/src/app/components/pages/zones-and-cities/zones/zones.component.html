@@ -105,17 +105,17 @@
 </div>
 
 <div class="data-table">
-  <table mat-table [dataSource]="dataSource" class="full-width-table">
+  <table mat-table matSort [dataSource]="dataSource" class="full-width-table">
     <ng-container matColumnDef="zone_id">
-      <th mat-header-cell *matHeaderCellDef> Zone ID </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Zone ID </th>
       <td mat-cell *matCellDef="let row"> {{ row.zone.zone_id }} </td>
     </ng-container>
     <ng-container matColumnDef="symbol">
-      <th mat-header-cell *matHeaderCellDef> Symbol </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Symbol </th>
       <td mat-cell *matCellDef="let row"> {{ row.zone.symbol }} </td>
     </ng-container>
     <ng-container matColumnDef="cities">
-      <th mat-header-cell *matHeaderCellDef> Cities </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Cities </th>
       <td mat-cell *matCellDef="let row">
         <span *ngFor="let city of row.cities; let isLast=last">
           {{ city.name }}{{ isLast ? '' : ', ' }}

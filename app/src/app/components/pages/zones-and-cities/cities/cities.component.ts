@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { City } from 'src/app/models/city.model';
@@ -10,7 +11,9 @@ import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service
   templateUrl: './cities.component.html',
   styleUrls: ['./cities.component.scss']
 })
-export class CitiesComponent implements OnInit {
+export class CitiesComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['city_id', 'name', 'nr_of_residents', 'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<City>;
@@ -32,6 +35,10 @@ export class CitiesComponent implements OnInit {
 
   ngOnInit(): void {
     this.zonesAndCitiesService.getCities()
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
   }
 
   showPanel(type: string, city?: City) {

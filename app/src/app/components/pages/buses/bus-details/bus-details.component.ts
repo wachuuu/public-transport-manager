@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Brand } from 'src/app/models/brand.model';
@@ -11,7 +12,9 @@ import { BusesService } from 'src/app/services/buses.service';
   templateUrl: './bus-details.component.html',
   styleUrls: ['./bus-details.component.scss']
 })
-export class BusDetailsComponent implements OnInit {
+export class BusDetailsComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['bus_id', 'number_plate', 'purchase', 'cost', 'bus_model', 
                                 'more', 'edit', 'delete'];
@@ -55,6 +58,10 @@ export class BusDetailsComponent implements OnInit {
   
   ngOnInit(): void {
     this.busService.getBuses();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
   }
 
   showPanel(type: string, bus?: Bus) {

@@ -163,17 +163,17 @@
 </div>
 
 <div class="data-table">
-  <table mat-table [dataSource]="dataSource" class="full-width-table">
+  <table mat-table matSort [dataSource]="dataSource" class="full-width-table">
     <ng-container matColumnDef="line_number">
-      <th mat-header-cell *matHeaderCellDef> Line number </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Line number </th>
       <td mat-cell *matCellDef="let row"> {{ row.line.line_number }} </td>
     </ng-container>
     <ng-container matColumnDef="day_line">
-      <th mat-header-cell *matHeaderCellDef> Line type </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Line type </th>
       <td mat-cell *matCellDef="let row"> {{ row.line.day_line ? 'Day line' : 'Night line' }} </td>
     </ng-container>
     <ng-container matColumnDef="stops">
-      <th mat-header-cell *matHeaderCellDef> Stops </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Stops </th>
       <td mat-cell *matCellDef="let row">
         <span *ngFor="let stop of row.stops; let last=last">{{stop.name}}{{last ? '' : ', '}}</span>
       </td>

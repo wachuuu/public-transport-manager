@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { LineWithStops } from 'src/app/models/line.model';
@@ -10,7 +11,9 @@ import { StopsAndLinesService } from 'src/app/services/stops-and-lines.service';
   templateUrl: './lines.component.html',
   styleUrls: ['./lines.component.scss']
 })
-export class LinesComponent implements OnInit {
+export class LinesComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['line_number', 'day_line', 'stops',
     'more', 'edit', 'delete'];
@@ -39,6 +42,10 @@ export class LinesComponent implements OnInit {
   ngOnInit(): void {
     this.stopsAndLinesService.getLinesWithStops();
     this.stopsAndLinesService.getStops();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
   }
 
   showPanel(type: string, line?: LineWithStops) {

@@ -166,25 +166,25 @@
 </div>
 
 <div class="data-table">
-  <table mat-table [dataSource]="dataSource" class="full-width-table">
+  <table mat-table matSort [dataSource]="dataSource" class="full-width-table">
     <ng-container matColumnDef="passenger_id">
-      <th mat-header-cell *matHeaderCellDef> Ticket ID </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Ticket ID </th>
       <td mat-cell *matCellDef="let row"> {{ row.passenger_id }} </td>
     </ng-container>
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let row"> {{ row.name }} </td>
     </ng-container>
     <ng-container matColumnDef="surname">
-      <th mat-header-cell *matHeaderCellDef> Validity days </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Validity days </th>
       <td mat-cell *matCellDef="let row"> {{ row.surname }} </td>
     </ng-container>
     <ng-container matColumnDef="ticket">
-      <th mat-header-cell *matHeaderCellDef> ticket </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Ticket </th>
       <td mat-cell *matCellDef="let row"> {{ row.ticket.name }} </td>
     </ng-container>
     <ng-container matColumnDef="date_of_purchase">
-      <th mat-header-cell *matHeaderCellDef> Price </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Date of purchase </th>
       <td mat-cell *matCellDef="let row"> {{ row.date_of_purchase }}</td>
     </ng-container>
     <ng-container matColumnDef="more">

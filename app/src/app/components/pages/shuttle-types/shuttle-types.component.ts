@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { ShuttleType } from 'src/app/models/shuttle-types';
@@ -9,7 +10,9 @@ import { ShuttleTypesService } from 'src/app/services/shuttle-types.service';
   templateUrl: './shuttle-types.component.html',
   styleUrls: ['./shuttle-types.component.scss']
 })
-export class ShuttleTypesComponent implements OnInit {
+export class ShuttleTypesComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['shuttle_type_id', 'type', 'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<ShuttleType>;
@@ -31,6 +34,10 @@ export class ShuttleTypesComponent implements OnInit {
 
   ngOnInit(): void {
     this.shuttleTypesService.getShuttleTypes();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
   }
 
   showPanel(type: string, shuttleType?: ShuttleType) {

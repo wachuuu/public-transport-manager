@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Driver } from 'src/app/models/driver.model';
@@ -10,7 +11,9 @@ import { NormalizeStringService } from 'src/app/services/normalize-string.servic
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss']
 })
-export class DriversComponent implements OnInit {
+export class DriversComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   drivers: Driver[];
   displayedColumns: string[] = ['driver_id', 'name', 'surname', 'email', 'phone_number', 
@@ -61,6 +64,10 @@ export class DriversComponent implements OnInit {
   
   ngOnInit(): void {
     this.driversService.getDrivers();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
   }
 
   applySearch(searchFilterValue: string) {
