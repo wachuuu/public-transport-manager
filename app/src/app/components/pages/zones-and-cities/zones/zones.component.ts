@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { City } from 'src/app/models/city.model';
 import { Ticket } from 'src/app/models/ticket.model';
 import { ZoneAffiliation } from 'src/app/models/zone-affiliation.model';
 import { ZoneWithCities } from 'src/app/models/zone-with-cities.model';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 import { TicketsService } from 'src/app/services/tickets.service';
 import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service';
 
@@ -13,11 +15,14 @@ import { ZonesAndCitiesService } from 'src/app/services/zones-and-cities.service
   templateUrl: './zones.component.html',
   styleUrls: ['./zones.component.scss']
 })
-export class ZonesComponent implements OnInit {
+export class ZonesComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['zone_id', 'symbol', 'cities', 'more', 'edit', 'delete'];
 
   dataSource: MatTableDataSource<ZoneWithCities>;
+  searchFilter = '';
   currentAction: Actions = Actions.None;
   affiliations: ZoneAffiliation[];
   ticketsForZone: Ticket[];
@@ -33,7 +38,9 @@ export class ZonesComponent implements OnInit {
     cities: []
   }
 
-  constructor(private zonesAndCitiesService: ZonesAndCitiesService, private ticketsService: TicketsService) {
+  constructor(private zonesAndCitiesService: ZonesAndCitiesService,
+    private ticketsService: TicketsService,
+    private s: NormalizeStringService) {
     this.dataSource = new MatTableDataSource();
     this.zonesAndCitiesService.zonesWithCities$.subscribe((data) => {
       this.dataSource.data = data;
@@ -46,6 +53,23 @@ export class ZonesComponent implements OnInit {
     this.zonesAndCitiesService.cities$.subscribe((data) => {
       this.allCities = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.zone.zone_id ?? '') + " "
+        + (data.zone.symbol ?? '');
+      data.cities.forEach(city => {
+        dataStr += ((city.name ?? '') + " ")
+      })
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
 
   ngOnInit(): void {
@@ -54,6 +78,19 @@ export class ZonesComponent implements OnInit {
     this.zonesAndCitiesService.getAffiliations();
     this.zonesAndCitiesService.getZonesWithCities();
     this.ticketsService.getTickets();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+  
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
 
   showPanel(type: string, zone?: ZoneWithCities) {

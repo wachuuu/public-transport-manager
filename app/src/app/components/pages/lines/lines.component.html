@@ -163,17 +163,29 @@
 </div>
 
 <div class="data-table">
-  <table mat-table [dataSource]="dataSource" class="full-width-table">
+
+  <div class="wrapper">
+    <mat-form-field class="search" appearance="standard">
+      <mat-label>Search</mat-label>
+      <input matInput (keyup)="applySearch(searchFilter)" placeholder="Search here"
+        [(ngModel)]="searchFilter" #input>
+      <button *ngIf="searchFilter" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <table mat-table matSort [dataSource]="dataSource" class="full-width-table">
     <ng-container matColumnDef="line_number">
-      <th mat-header-cell *matHeaderCellDef> Line number </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Line number </th>
       <td mat-cell *matCellDef="let row"> {{ row.line.line_number }} </td>
     </ng-container>
     <ng-container matColumnDef="day_line">
-      <th mat-header-cell *matHeaderCellDef> Line type </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Line type </th>
       <td mat-cell *matCellDef="let row"> {{ row.line.day_line ? 'Day line' : 'Night line' }} </td>
     </ng-container>
     <ng-container matColumnDef="stops">
-      <th mat-header-cell *matHeaderCellDef> Stops </th>
+      <th mat-sort-header mat-header-cell *matHeaderCellDef> Stops </th>
       <td mat-cell *matCellDef="let row">
         <span *ngFor="let stop of row.stops; let last=last">{{stop.name}}{{last ? '' : ', '}}</span>
       </td>

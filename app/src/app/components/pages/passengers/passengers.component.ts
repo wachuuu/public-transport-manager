@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Passenger } from 'src/app/models/passenger.model';
 import { Ticket } from 'src/app/models/ticket.model';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 import { PassengersService } from 'src/app/services/passengers.service';
 import { TicketsService } from 'src/app/services/tickets.service';
 
@@ -11,11 +14,14 @@ import { TicketsService } from 'src/app/services/tickets.service';
   templateUrl: './passengers.component.html',
   styleUrls: ['./passengers.component.scss']
 })
-export class PassengersComponent implements OnInit {
+export class PassengersComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['passenger_id', 'name', 'surname', 'ticket', 'date_of_purchase',
     'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<Passenger>;
+  searchFilter = '';
   currentAction: Actions = Actions.None;
   tickets: Ticket[];
   currentPassenger: Passenger;
@@ -31,7 +37,10 @@ export class PassengersComponent implements OnInit {
     date_of_purchase: null
   };
 
-  constructor(private passengersService: PassengersService, private ticketsService: TicketsService) {
+  constructor(private passengersService: PassengersService, 
+    private ticketsService: TicketsService, 
+    private s: NormalizeStringService, 
+    private datePipe: DatePipe) {
     this.dataSource = new MatTableDataSource();
     this.passengersService.passengers$.subscribe((data) => {
       this.dataSource.data = data;
@@ -40,11 +49,46 @@ export class PassengersComponent implements OnInit {
     this.ticketsService.tickets$.subscribe((data) => {
       this.tickets = data
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.passenger_id ?? '') + " "
+        + (data.pesel ?? '') + " "
+        + (data.name ?? '') + " "
+        + (data.surname ?? '') + " "
+        + (data.phone_number ?? '') + " "
+        + (data.email ?? '') + " "
+        + (data.address ?? '') + " "
+        + (data.ticket.name ?? '') + " "
+        + (this.datePipe.transform(data.date_of_purchase, 'YYYY-MM-dd') ?? '') + " "
+        + (this.datePipe.transform(data.valid_till, 'YYYY-MM-dd') ?? '');
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
 
   ngOnInit(): void {
     this.passengersService.getPassengers();
     this.ticketsService.getTickets();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+  
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
 
   showPanel(type: string, ticket?: Passenger) {

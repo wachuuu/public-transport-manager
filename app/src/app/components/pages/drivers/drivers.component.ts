@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Driver } from 'src/app/models/driver.model';
 import { DriversService } from 'src/app/services/drivers.service';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 
 @Component({
   selector: 'app-drivers',
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss']
 })
-export class DriversComponent implements OnInit {
+export class DriversComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   drivers: Driver[];
   displayedColumns: string[] = ['driver_id', 'name', 'surname', 'email', 'phone_number', 
@@ -28,16 +32,50 @@ export class DriversComponent implements OnInit {
   };
 
   dataSource: MatTableDataSource<Driver>;
+  searchFilter = '';
 
-  constructor(private driversService: DriversService) {
+  constructor(private driversService: DriversService, private s: NormalizeStringService) {
     this.dataSource = new MatTableDataSource();
     this.driversService.drivers$.subscribe((data) => {
       this.dataSource.data = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.driver_id ?? '') + " "
+        + (data.name ?? '') + " "
+        + (data.surname ?? '') + " "
+        + (data.pesel ?? '') + " "
+        + (data.phone_number ?? '') + " "
+        + (data.email ?? '') + " "
+        + (data.address ?? '') + " "
+        + (data.salary ?? '');
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
   
   ngOnInit(): void {
     this.driversService.getDrivers();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
   
   showPanel(type: string, driver?: Driver) {

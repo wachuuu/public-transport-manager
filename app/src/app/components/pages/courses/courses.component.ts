@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Bus } from 'src/app/models/bus.model';
@@ -9,6 +10,7 @@ import { ShuttleType } from 'src/app/models/shuttle-types';
 import { BusesService } from 'src/app/services/buses.service';
 import { CoursesService } from 'src/app/services/courses.service';
 import { DriversService } from 'src/app/services/drivers.service';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 import { ShuttleTypesService } from 'src/app/services/shuttle-types.service';
 import { StopsAndLinesService } from 'src/app/services/stops-and-lines.service';
 
@@ -17,11 +19,14 @@ import { StopsAndLinesService } from 'src/app/services/stops-and-lines.service';
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.scss']
 })
-export class CoursesComponent implements OnInit {
+export class CoursesComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['course_id', 'line', 'shuttle_type', 'departureTime', 'arrival_time',
     'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<Course>;
+  searchFilter = '';
   currentAction: Actions = Actions.None;
   lines: Line[];
   buses: Bus[];
@@ -46,7 +51,8 @@ export class CoursesComponent implements OnInit {
     private linesService: StopsAndLinesService,
     private shuttleTypesService: ShuttleTypesService,
     private busesService: BusesService,
-    private driversService: DriversService
+    private driversService: DriversService,
+    private s: NormalizeStringService
   ) {
     this.dataSource = new MatTableDataSource();
     this.coursesService.courses$.subscribe((data) => {
@@ -64,6 +70,26 @@ export class CoursesComponent implements OnInit {
     this.driversService.drivers$.subscribe((data) => {
       this.drivers = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.course_id ?? '') + " "
+        + (data.line ?? '') + " "
+        + (data.shuttle_type.type ?? '') + " "
+        + (data.bus.number_plate ?? '') + " "
+        + (data.driver.name ?? '') + " "
+        + (data.driver.surname ?? '') + " "
+        + (data.departureTime ?? '') + " "
+        + (data.arrival_time ?? '');
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
 
   ngOnInit(): void {
@@ -73,6 +99,20 @@ export class CoursesComponent implements OnInit {
     this.busesService.getBuses();
     this.driversService.getDrivers();
   }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+  
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
+  }
+
   showPanel(type: string, course?: Course) {
     if (course) this.currentCourse = course;
     switch(type) { 

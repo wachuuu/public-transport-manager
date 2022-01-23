@@ -1,19 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { Brand } from 'src/app/models/brand.model';
 import { BusModel } from 'src/app/models/busModel.model';
 import { BusesService } from 'src/app/services/buses.service';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 
 @Component({
   selector: 'app-brand-details',
   templateUrl: './brand-details.component.html',
   styleUrls: ['./brand-details.component.scss']
 })
-export class BrandDetailsComponent implements OnInit {
+export class BrandDetailsComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['brand_id', 'name', 'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<Brand>;
+  searchFilter = '';
   currentAction: Actions = Actions.None;
   modelsForBrand: BusModel[];
   currentBrand: Brand;
@@ -23,15 +28,42 @@ export class BrandDetailsComponent implements OnInit {
     name: ''
   };
 
-  constructor(private busService: BusesService) {
+  constructor(private busService: BusesService, private s: NormalizeStringService) {
     this.dataSource = new MatTableDataSource();
     this.busService.brands$.subscribe((data) => {
       this.dataSource.data = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.brand_id ?? '') + " "
+        + (data.name ?? '');
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
 
   ngOnInit(): void {
     this.busService.getBrands();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
 
   showPanel(type: string, brand?: Brand) {

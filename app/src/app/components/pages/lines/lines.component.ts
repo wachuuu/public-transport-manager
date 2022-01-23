@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Actions } from 'src/app/models/actions.enum';
 import { LineWithStops } from 'src/app/models/line.model';
 import { Stop } from 'src/app/models/stop.model';
+import { NormalizeStringService } from 'src/app/services/normalize-string.service';
 import { StopsAndLinesService } from 'src/app/services/stops-and-lines.service';
 
 @Component({
@@ -10,11 +12,14 @@ import { StopsAndLinesService } from 'src/app/services/stops-and-lines.service';
   templateUrl: './lines.component.html',
   styleUrls: ['./lines.component.scss']
 })
-export class LinesComponent implements OnInit {
+export class LinesComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['line_number', 'day_line', 'stops',
     'more', 'edit', 'delete'];
   dataSource: MatTableDataSource<LineWithStops>;
+  searchFilter = '';
   currentAction: Actions = Actions.None;
   stops: Stop[];
   showStopPicker: boolean = false;
@@ -26,7 +31,7 @@ export class LinesComponent implements OnInit {
     stops: []
   };
 
-  constructor(private stopsAndLinesService: StopsAndLinesService) {
+  constructor(private stopsAndLinesService: StopsAndLinesService, private s: NormalizeStringService) {
     this.dataSource = new MatTableDataSource();
     this.stopsAndLinesService.linesWithStops$.subscribe((data) => {
       this.dataSource.data = data;
@@ -34,11 +39,40 @@ export class LinesComponent implements OnInit {
     this.stopsAndLinesService.stops$.subscribe((data) => {
       this.stops = data;
     })
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      let matchRow = true;
+      let keywords = Array<string>();
+      let dataStr = (data.line.line_number ?? '') + " "
+      data.stops.forEach(stop => {
+        dataStr += ((stop.name ?? '') + " ")
+      })
+      dataStr = this.s.normalize(dataStr.toLowerCase());
+      keywords = filter.split(" ");
+      keywords.forEach(key => {
+        // every keyword should match, otherwise row is rejected
+        if (dataStr.indexOf(key) == -1) matchRow = false;
+      })
+      return matchRow;
+    }
   }
 
   ngOnInit(): void {
     this.stopsAndLinesService.getLinesWithStops();
     this.stopsAndLinesService.getStops();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+  }
+
+  applySearch(searchFilterValue: string) {
+    this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
+  }
+  
+  clearSearch() {
+    this.applySearch('');
+    this.searchFilter = '';
   }
 
   showPanel(type: string, line?: LineWithStops) {
