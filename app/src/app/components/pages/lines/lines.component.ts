@@ -43,17 +43,26 @@ export class LinesComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.line.line_number ?? '') + " "
+      let dataStr = "id=" + (data.line.line_number ?? '') + " ";
+      if (data.line.day_line) dataStr += "day line";
+      else dataStr += "night line";
       data.stops.forEach(stop => {
         dataStr += ((stop.name ?? '') + " ")
       })
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;
+    }
+
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'line_number': return item.line.line_number;
+        case 'day_line': return item.line.day_line ? 'D' : 'N';
+        default: return item[property];
+      }
     }
   }
 

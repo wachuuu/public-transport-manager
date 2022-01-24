@@ -61,7 +61,7 @@ export class BusDetailsComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.bus_id ?? '') + " "
+      let dataStr = "id=" + (data.bus_id ?? '') + " "
         + (data.number_plate ?? '') + " "
         + (this.datePipe.transform(data.purchase_date, 'YYYY-MM-dd') ?? '') + " "
         + (this.datePipe.transform(data.service_date, 'YYYY-MM-dd') ?? '') + " "
@@ -71,10 +71,17 @@ export class BusDetailsComponent implements OnInit, AfterViewInit {
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;
+    }
+
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'purchase': return item.purchase_date;
+        case 'bus_model': return item.bus_model.model_name;
+        default: return item[property];
+      }
     }
   }
   
@@ -190,6 +197,9 @@ export class BusDetailsComponent implements OnInit, AfterViewInit {
   isFormValid() {
     if (this.newBus.number_plate == '' ||
         this.newBus.bus_model.model_name == '' ||
+        this.newBus.monthly_maintenance_cost < 0 ||
+        this.newBus.cost < 0 ||
+        this.newBus.purchase_date > this.newBus.service_date ||
         this.newBus.bus_model.brand.name == '') {
         return false;
     } else return true;

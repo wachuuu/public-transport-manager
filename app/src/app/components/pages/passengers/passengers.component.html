@@ -88,8 +88,8 @@
         <strong>Email: </strong> {{ currentPassenger.email }} <br>
         <strong>Address: </strong> {{ currentPassenger.address }} <br>
         <strong>Ticket: </strong> {{ currentPassenger.ticket.name }} <br>
-        <strong>Date of purchase: </strong> {{ currentPassenger.date_of_purchase }} <br>
-        <strong>Valid till: </strong> {{ currentPassenger.valid_till }} <br>
+        <strong>Date of purchase: </strong> {{ currentPassenger.date_of_purchase | date:"YYYY-MM-dd"}} <br>
+        <strong>Valid till: </strong> {{ currentPassenger.valid_till | date:"YYYY-MM-dd"}} <br>
       </div>
     </div>
     <div class="action-buttons">

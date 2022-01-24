@@ -28,7 +28,7 @@ export class DriversComponent implements OnInit, AfterViewInit {
     phone_number: '',
     email: '',
     address: '',
-    salary: 0
+    salary: null
   };
 
   dataSource: MatTableDataSource<Driver>;
@@ -43,7 +43,7 @@ export class DriversComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.driver_id ?? '') + " "
+      let dataStr = "id=" + (data.driver_id ?? '') + " "
         + (data.name ?? '') + " "
         + (data.surname ?? '') + " "
         + (data.pesel ?? '') + " "
@@ -54,7 +54,6 @@ export class DriversComponent implements OnInit, AfterViewInit {
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;
@@ -156,5 +155,17 @@ export class DriversComponent implements OnInit, AfterViewInit {
   editDriver(driver: Driver) {
     this.driversService.updateDriver(driver)
     this.showPanel('view', driver);
+  }
+
+  isFormValid() {
+    if (this.newDriver.name == '' ||
+        this.newDriver.surname == '' ||
+        this.newDriver.pesel == '' ||
+        this.newDriver.phone_number == '' ||
+        this.newDriver.email == '' ||
+        this.newDriver.salary < 0 
+        ) {
+        return false;
+    } else return true;
   }
 }
