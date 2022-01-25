@@ -37,12 +37,11 @@ export class BrandDetailsComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.brand_id ?? '') + " "
+      let dataStr = "id=" + (data.brand_id ?? '') + " "
         + (data.name ?? '');
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;

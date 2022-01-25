@@ -50,7 +50,7 @@ export class BusModelDetailsComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.model_id ?? '') + " "
+      let dataStr = "id=" + (data.model_id ?? '') + " "
         + (data.model_name ?? '') + " "
         + (data.year_of_production ?? '') + " "
         + (data.number_of_seats ?? '') + " "
@@ -58,10 +58,16 @@ export class BusModelDetailsComponent implements OnInit, AfterViewInit {
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;
+    }
+
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'brand': return item.brand.name;
+        default: return item[property];
+      }
     }
   }
 
@@ -171,6 +177,8 @@ export class BusModelDetailsComponent implements OnInit, AfterViewInit {
 
   isFormValid() {
     if (this.newModel.model_name == '' ||
+        this.newModel.number_of_seats <= 0 ||
+        this.newModel.year_of_production < 1990 ||
         this.newModel.brand.name == '') {
         return false;
     } else return true;

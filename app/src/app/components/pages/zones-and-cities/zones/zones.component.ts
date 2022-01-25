@@ -57,7 +57,7 @@ export class ZonesComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.zone.zone_id ?? '') + " "
+      let dataStr = "id=" + (data.zone.zone_id ?? '') + " "
         + (data.zone.symbol ?? '');
       data.cities.forEach(city => {
         dataStr += ((city.name ?? '') + " ")
@@ -65,10 +65,17 @@ export class ZonesComponent implements OnInit, AfterViewInit {
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;
+    }
+
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'zone_id': return item.zone.zone_id;
+        case 'symbol': return item.zone.symbol;
+        default: return item[property];
+      }
     }
   }
 

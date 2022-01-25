@@ -74,7 +74,7 @@ export class CoursesComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.course_id ?? '') + " "
+      let dataStr = "id=" + (data.course_id ?? '') + " "
         + (data.line ?? '') + " "
         + (data.shuttle_type.type ?? '') + " "
         + (data.bus.number_plate ?? '') + " "
@@ -85,10 +85,17 @@ export class CoursesComponent implements OnInit, AfterViewInit {
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;
+    }
+
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'line': return item.line.line_number;
+        case 'shuttle_type': return item.shuttle_type.type;
+        default: return item[property];
+      }
     }
   }
 
@@ -107,7 +114,7 @@ export class CoursesComponent implements OnInit, AfterViewInit {
   applySearch(searchFilterValue: string) {
     this.dataSource.filter = this.s.normalize(searchFilterValue.toLowerCase());
   }
-  
+
   clearSearch() {
     this.applySearch('');
     this.searchFilter = '';
@@ -115,74 +122,74 @@ export class CoursesComponent implements OnInit, AfterViewInit {
 
   showPanel(type: string, course?: Course) {
     if (course) this.currentCourse = course;
-    switch(type) { 
-      case 'none': { 
+    switch (type) {
+      case 'none': {
         this.currentAction = Actions.None;
-        break; 
-      } 
-      case 'add-new': { 
+        break;
+      }
+      case 'add-new': {
         this.currentAction = Actions.AddNew;
         this.linesService.getLines();
         this.shuttleTypesService.getShuttleTypes();
         this.busesService.getBuses();
         this.driversService.getDrivers();
         this.newCourse = JSON.parse(JSON.stringify(this.blankCourse));
-        break; 
+        break;
       }
-      case 'view': { 
+      case 'view': {
         this.currentAction = Actions.View;
-        break; 
+        break;
       }
-      case 'edit': { 
+      case 'edit': {
         this.currentAction = Actions.Edit;
         this.linesService.getLines();
         this.shuttleTypesService.getShuttleTypes();
         this.busesService.getBuses();
         this.driversService.getDrivers();
         this.newCourse = this.parseCourseTime(JSON.parse(JSON.stringify(this.currentCourse)));
-        break; 
+        break;
       }
-      case 'delete': { 
+      case 'delete': {
         this.currentAction = Actions.Delete;
-        break; 
+        break;
       }
-      default: { 
+      default: {
         this.currentAction = Actions.None;
-        break; 
-      } 
+        break;
+      }
     }
   }
 
   isActivePanel(type: string) {
-    switch(type) { 
-      case 'none': { 
-        if (this.currentAction == Actions.None) 
+    switch (type) {
+      case 'none': {
+        if (this.currentAction == Actions.None)
           return true;
         else return false;
-      } 
-      case 'add-new': { 
+      }
+      case 'add-new': {
         if (this.currentAction == Actions.AddNew)
           return true;
         else return false;
       }
-      case 'view': { 
+      case 'view': {
         if (this.currentAction == Actions.View)
           return true;
         else return false;
       }
-      case 'edit': { 
+      case 'edit': {
         if (this.currentAction == Actions.Edit)
           return true;
         else return false;
       }
-      case 'delete': { 
+      case 'delete': {
         if (this.currentAction == Actions.Delete)
           return true;
         else return false;
       }
-      default: { 
+      default: {
         return false;
-      } 
+      }
     }
   }
 
@@ -229,22 +236,22 @@ export class CoursesComponent implements OnInit, AfterViewInit {
 
   isFormValid() {
     if (this.newCourse.line.lineId == null ||
-        this.newCourse.shuttle_type.shuttle_type_id == null ||
-        this.newCourse.bus.bus_id == null ||
-        this.newCourse.driver.driver_id == null ||
-        this.newCourse._departureTimeMinutes > 60 ||
-        this.newCourse._departureTimeMinutes < 0 ||
-        this.newCourse._departureTimeHours > 24 ||
-        this.newCourse._departureTimeHours < 0 ||
-        this.newCourse._arrival_timeMinutes > 60 ||
-        this.newCourse._arrival_timeMinutes < 0 ||
-        this.newCourse._arrival_timeHours > 24 ||
-        this.newCourse._arrival_timeHours < 0 ||
-        (this.newCourse._arrival_timeHours < this.newCourse._departureTimeHours) ||
-        (this.newCourse._arrival_timeHours == this.newCourse._departureTimeHours &&
+      this.newCourse.shuttle_type.shuttle_type_id == null ||
+      this.newCourse.bus.bus_id == null ||
+      this.newCourse.driver.driver_id == null ||
+      this.newCourse._departureTimeMinutes > 60 ||
+      this.newCourse._departureTimeMinutes < 0 ||
+      this.newCourse._departureTimeHours > 24 ||
+      this.newCourse._departureTimeHours < 0 ||
+      this.newCourse._arrival_timeMinutes > 60 ||
+      this.newCourse._arrival_timeMinutes < 0 ||
+      this.newCourse._arrival_timeHours > 24 ||
+      this.newCourse._arrival_timeHours < 0 ||
+      (this.newCourse._arrival_timeHours < this.newCourse._departureTimeHours) ||
+      (this.newCourse._arrival_timeHours == this.newCourse._departureTimeHours &&
         this.newCourse._arrival_timeMinutes <= this.newCourse._departureTimeMinutes)
-        ) {
-        return false;
+    ) {
+      return false;
     } else return true;
   }
 }

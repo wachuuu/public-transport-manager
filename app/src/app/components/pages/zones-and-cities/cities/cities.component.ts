@@ -37,13 +37,12 @@ export class CitiesComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.city_id ?? '') + " "
+      let dataStr = "id=" + (data.city_id ?? '') + " "
         + (data.name ?? '') + " "
         + (data.nr_of_residents ?? '');
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;
@@ -150,7 +149,8 @@ export class CitiesComponent implements OnInit, AfterViewInit {
 
   isFormValid() {
     if (this.newCity.name == '' ||
-    this.newCity.nr_of_residents < 0) {
+    this.newCity.nr_of_residents == null ||
+    this.newCity.nr_of_residents <= 0) {
       return false;
     } else return true;
   }

@@ -35,12 +35,11 @@ export class ShuttleTypesComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.shuttle_type_id ?? '') + " "
+      let dataStr = "id=" + (data.shuttle_type_id ?? '') + " "
         + (data.type ?? '');
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;

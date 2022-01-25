@@ -22,12 +22,12 @@
 
         <mat-form-field class="form-input">
           <input matInput name="year_of_production" #year_of_production="ngModel"
-            [(ngModel)]="newModel.year_of_production" type="number" placeholder="Year of production">
+            [(ngModel)]="newModel.year_of_production" type="number" min="1900" placeholder="Year of production">
         </mat-form-field>
 
         <mat-form-field class="form-input">
           <input matInput name="number_of_seats" #number_of_seats="ngModel"
-            [(ngModel)]="newModel.number_of_seats" type="number" placeholder="Number of seats">
+            [(ngModel)]="newModel.number_of_seats" type="number" min="1" placeholder="Number of seats">
         </mat-form-field>
 
         <mat-form-field *ngIf="!addNewBrand">
@@ -98,12 +98,12 @@
 
         <mat-form-field class="form-input">
           <input matInput name="year_of_production" #year_of_production="ngModel"
-            [(ngModel)]="newModel.year_of_production" type="number" placeholder="Year of production">
+            [(ngModel)]="newModel.year_of_production" type="number" min="1900" placeholder="Year of production">
         </mat-form-field>
 
         <mat-form-field class="form-input">
           <input matInput name="number_of_seats" #number_of_seats="ngModel"
-            [(ngModel)]="newModel.number_of_seats" type="number" placeholder="Number of seats">
+            [(ngModel)]="newModel.number_of_seats" type="number" min="1" placeholder="Number of seats">
         </mat-form-field>
 
         <mat-form-field *ngIf="!addNewBrand">

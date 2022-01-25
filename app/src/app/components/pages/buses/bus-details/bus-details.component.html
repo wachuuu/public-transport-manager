@@ -36,11 +36,11 @@
 
         <mat-form-field class="form-input">
           <input matInput name="monthly_maintenance_cost" #monthly_maintenance_cost="ngModel"
-            [(ngModel)]="newBus.monthly_maintenance_cost" type="number" placeholder="Monthly maintenance cost">
+            [(ngModel)]="newBus.monthly_maintenance_cost" type="number" min="0" placeholder="Monthly maintenance cost">
         </mat-form-field>
 
         <mat-form-field class="form-input">
-          <input matInput name="cost" #cost="ngModel" [(ngModel)]="newBus.cost" type="number" placeholder="Cost">
+          <input matInput name="cost" #cost="ngModel" [(ngModel)]="newBus.cost" min="0" type="number" placeholder="Cost">
         </mat-form-field>
 
         <mat-form-field *ngIf="!addNewModel">
@@ -166,11 +166,11 @@
 
         <mat-form-field class="form-input">
           <input matInput name="monthly_maintenance_cost" #monthly_maintenance_cost="ngModel"
-            [(ngModel)]="newBus.monthly_maintenance_cost" type="number" placeholder="Monthly maintenance cost">
+            [(ngModel)]="newBus.monthly_maintenance_cost" type="number" min="0" placeholder="Monthly maintenance cost">
         </mat-form-field>
 
         <mat-form-field class="form-input">
-          <input matInput name="cost" #cost="ngModel" [(ngModel)]="newBus.cost" type="number" placeholder="Cost">
+          <input matInput name="cost" #cost="ngModel" [(ngModel)]="newBus.cost" min="0" type="number" placeholder="Cost">
         </mat-form-field>
 
         <mat-form-field *ngIf="!addNewModel">

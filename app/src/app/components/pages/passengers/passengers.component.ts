@@ -53,7 +53,7 @@ export class PassengersComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = (data, filter) => {
       let matchRow = true;
       let keywords = Array<string>();
-      let dataStr = (data.passenger_id ?? '') + " "
+      let dataStr = "id=" + (data.passenger_id ?? '') + " "
         + (data.pesel ?? '') + " "
         + (data.name ?? '') + " "
         + (data.surname ?? '') + " "
@@ -66,10 +66,16 @@ export class PassengersComponent implements OnInit, AfterViewInit {
       dataStr = this.s.normalize(dataStr.toLowerCase());
       keywords = filter.split(" ");
       keywords.forEach(key => {
-        // every keyword should match, otherwise row is rejected
         if (dataStr.indexOf(key) == -1) matchRow = false;
       })
       return matchRow;
+    }
+
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'ticket': return item.ticket.name;
+        default: return item[property];
+      }
     }
   }
 
