@@ -1,9 +1,3 @@
--- on Windows:
--- open cmd and go to project directory
--- run command:
--- "C:\Program Files\PostgreSQL\14\bin\psql.exe" -U postgres -f .\publictransportmanager_db.sql postgres
--- provide password for superuser postgres (default is: postgres)
-
 DROP TRIGGER IF EXISTS validity_period ON ptm_passengers;
 DROP FUNCTION IF EXISTS calculate_validity_period();
 DROP PROCEDURE IF EXISTS delete_passenger(integer);
@@ -24,19 +18,7 @@ DROP TABLE IF EXISTS ptm_courses,
     ptm_drivers,
     ptm_users
     CASCADE;
-
---ALTER DEFAULT PRIVILEGES REVOKE ALL ON TABLES FROM publictransportmanager;
---ALTER DEFAULT PRIVILEGES REVOKE ALL ON SEQUENCES FROM publictransportmanager;
---DROP USER publictransportmanager;
-
---CREATE USER publictransportmanager WITH PASSWORD 'password';
--- DROP DATABASE publictransportmanagerdb;
--- CREATE DATABASE publictransportmanagerdb WITH TEMPLATE=template0 OWNER=publictransportmanager;
--- \connect publictransportmanagerdb;
-
---ALTER DEFAULT PRIVILEGES GRANT ALL ON TABLES TO publictransportmanager;
---ALTER DEFAULT PRIVILEGES GRANT ALL ON SEQUENCES TO publictransportmanager;
-
+    
 CREATE TABLE ptm_users(
     user_id     INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     email       VARCHAR(30) NOT NULL,
