@@ -1,0 +1,32 @@
+version: '3'
+services:
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+  api:
+    depends_on:
+      - db
+    restart: always
+    build: ./api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  app:
+    build: ./app
+    ports:
+      - 80:80
+      
+volumes:
+  postgres_db:

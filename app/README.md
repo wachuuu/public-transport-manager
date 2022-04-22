@@ -6,6 +6,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+
+Run `docker build . -t publictransportmanagerapp && docker run -i -t --rm -p 80:80 --name publictransportmanagerapp publictransportmanagerapp` to start a dev server in a docker container. Navigate to http://localhost:80/.
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
