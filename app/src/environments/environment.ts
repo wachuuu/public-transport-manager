@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080'
+  apiUrl: 'http://publictransportmanagerapi-env-1.eba-r9izvnin.eu-central-1.elasticbeanstalk.com'
 };
 
 /*
